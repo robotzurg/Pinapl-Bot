@@ -1,4 +1,5 @@
 const db = require('../db.js');
+const { capitalize } = require('../func.js');
 
 module.exports = {
 	name: 'buy',
@@ -7,6 +8,7 @@ module.exports = {
 	args: true,
 	usage: `<name>`,
 	execute(message, args) {
+        args[0] = capitalize(args[0]);
         const item_name = args[0];
         const item_obj = db.shop.get(item_name);
         if (item_obj === undefined) return message.channel.send('Invalid item! Use `!shop` to view the items in the shop.');

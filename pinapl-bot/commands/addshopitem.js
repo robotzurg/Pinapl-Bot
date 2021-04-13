@@ -1,4 +1,5 @@
 const db = require('../db.js');
+const { capitalize } = require('../func.js');
 
 module.exports = {
 	name: 'addshopitem',
@@ -9,6 +10,7 @@ module.exports = {
 	usage: `<name> | <cost> | <description> | <emoji>`,
 	execute(message, args) {
         if (message.member.hasPermission('ADMINISTRATOR')) {
+            args[0] = capitalize(args[0]);
             const item_name = args[0];
             const cost = args[1];
             const desc = args[2];
