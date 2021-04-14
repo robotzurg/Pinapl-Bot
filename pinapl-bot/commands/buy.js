@@ -19,16 +19,16 @@ module.exports = {
             db.balances.set(message.author.id, balance);
             const purchase_channel = message.guild.channels.cache.get('814788744573878312');
 
-            if (!message.content.includes('Banana') && !message.content.includes('VIP')) {
+            if (!message.content.toLowerCase().includes('banana') && !message.content.toLowerCase().includes('vip') && !message.content.toLowerCase().includes('grape')) {
                 purchase_channel.send(`<@145267507844874241>, <@${message.author.id}> has bought the ${item_obj.emoji} **${item_name}** ${item_obj.emoji} item!`);
             } else {
                 purchase_channel.send(`<@${message.author.id}> has bought the ${item_obj.emoji} **${item_name}** ${item_obj.emoji} item.`);
-                if (message.content.includes('Banana')) {
+                if (message.content.toLowerCase().includes('banana')) {
 
                     const bananaRole = message.client.guilds.cache.find(guild => guild.id === '771373425734320159').roles.cache.find(role => role.name === "🍌Banana");
                     message.guild.members.fetch(message.author).then(a => a.roles.add(bananaRole));
 
-                } else if (message.content.includes('VIP')) {
+                } else if (message.content.toLowerCase().includes('VIP')) {
 
                     const VIPRole = message.client.guilds.cache.find(guild => guild.id === '771373425734320159').roles.cache.find(role => role.name === "🍐VIP");
                     message.guild.members.fetch(message.author).then(a => a.roles.add(VIPRole));
