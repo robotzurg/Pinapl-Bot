@@ -29,7 +29,7 @@ module.exports = {
         const betEmbed = new Discord.MessageEmbed()
 
         .setColor('#ffff00')
-        .setTitle(`<:botrng:788063030658727988> Pinapl's Casino <:botrng:788063030658727988>`)
+        .setTitle(`<:botrng:831955715803316339> Pinapl's Casino <:botrng:831955715803316339>`)
         .setDescription(`You are betting **${bet_amt}**<:pp:772971222119612416>.`)
         .addField(`Your roll:`, `${rand_amt_plr}`)
         .addField(`The dealers roll:`, `${rand_amt_bot}`);
