@@ -3,13 +3,14 @@ const fs = require('fs');
 const { prefix, token } = require('./config.json');
 const db = require("./db.js");
 const cron = require("node-cron");
+const { add_role, remove_role } = require('./func');
 
 // Set up random number function
 function randomNumber(min, max) {  
     return Math.random() * (max - min) + min; 
 }  
 
-const client = new Discord.Client();
+const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const cooldowns = new Discord.Collection();
@@ -55,6 +56,133 @@ cron.schedule('00 11 * * *', () => {
 //Listen for people joining
 client.on('guildMemberAdd', (guildMember) => {
 	db.balances.set(guildMember.id, 0);
+});
+
+client.on("messageReactionAdd", function(messageReaction, user) {
+	if (messageReaction.message.id === '833766691740844052' || messageReaction.message.id === '833766713862127626' || messageReaction.message.id === '833766740893892610' ||
+	messageReaction.message.id === '833766769155899443' || messageReaction.message.id === '833766812012904448') {
+
+		messageReaction.fetch()
+		.then(fullmessage => {
+			// Add roles based on the message
+			switch(messageReaction.message.id) {
+				case '833766691740844052': // Pronouns
+					switch(messageReaction.emoji.name) {
+						case '♂️': add_role(fullmessage.message, user, '771485020618883083'); break;
+						case '♀️': add_role(fullmessage.message, user, '771485038487404554'); break;
+						case '⚧': add_role(fullmessage.message, user, '771485053938958377'); break;
+					}
+				break;
+
+				case '833766713862127626': // Ping Preference
+					switch(messageReaction.emoji.name) {
+						case 'botanon': add_role(fullmessage.message, user, '771383105252491306'); break;
+						case 'botglad': add_role(fullmessage.message, user, '772870869583527947'); break;
+					}
+				break;
+
+				case '833766740893892610': // Extra opt-in stuff
+					switch(messageReaction.emoji.name) {
+						case '🍓': add_role(fullmessage.message, user, '802293656396103700'); break;
+						case '🥝': add_role(fullmessage.message, user, '833753177698467840'); break;
+						case '🪵': add_role(fullmessage.message, user, '833758889321300010'); break; // This is wood, for some reason
+					}
+				break;
+
+				case '833766769155899443': // Restrict access
+					switch(messageReaction.emoji.name) {
+						case '🍈': add_role(fullmessage.message, user, '810923161079644161'); break;
+						case '🍋': add_role(fullmessage.message, user, '809853738080534558'); break;
+						case '👻': add_role(fullmessage.message, user, '777964201255501855'); break; 
+					}
+				break;
+
+				case '833766812012904448': // Districts
+					switch(messageReaction.emoji.name) {
+						case 'botdanish': add_role(fullmessage.message, user, '776119639880106025'); break;
+						case 'Kerchow': add_role(fullmessage.message, user, '776119791215050802'); break;
+						case 'pinapl': add_role(fullmessage.message, user, '776118809839927317'); break; 
+						case 'bot_h': add_role(fullmessage.message, user, '776119931934474315'); break; 
+						case 'botvibe': add_role(fullmessage.message, user, '776119551250792459'); break; 
+						case 'botcry': add_role(fullmessage.message, user, '776129405491347507'); break; // Oceans District
+						case 'botbridge': add_role(fullmessage.message, user, '776129887449907230'); break; 
+						case 'botbot': add_role(fullmessage.message, user, '776120277615902720'); break; 
+						case 'cbotmagenta': add_role(fullmessage.message, user, '776129262980956170'); break; 
+						case 'botcatpink': add_role(fullmessage.message, user, '776128714752524289'); break; 
+						case 'dougdimmabot': add_role(fullmessage.message, user, '776129824397328396'); break; 
+						case 'bot4': add_role(fullmessage.message, user, '776119435966283806'); break; 
+					}
+				break;
+			}
+
+		})	
+		.catch(error => {
+			console.log('Something went wrong when fetching the message: ', error);
+		});
+	}
+});
+
+client.on("messageReactionRemove", function(messageReaction, user) {
+	if (messageReaction.message.id === '833766691740844052' || messageReaction.message.id === '833766713862127626' || messageReaction.message.id === '833766740893892610' ||
+	messageReaction.message.id === '833766769155899443' || messageReaction.message.id === '833766812012904448') {
+
+		messageReaction.fetch()
+		.then(fullmessage => {
+			// Add roles based on the message
+			switch(messageReaction.message.id) {
+				case '833766691740844052': // Pronouns
+					switch(messageReaction.emoji.name) {
+						case '♂️': remove_role(fullmessage.message, user, '771485020618883083'); break;
+						case '♀️': remove_role(fullmessage.message, user, '771485038487404554'); break;
+						case '⚧': remove_role(fullmessage.message, user, '771485053938958377'); break;
+					}
+				break;
+
+				case '833766713862127626': // Ping Preference
+					switch(messageReaction.emoji.name) {
+						case 'botanon': remove_role(fullmessage.message, user, '771383105252491306'); break;
+						case 'botglad': remove_role(fullmessage.message, user, '772870869583527947'); break;
+					}
+				break;
+
+				case '833766740893892610': // Extra opt in stuff
+					switch(messageReaction.emoji.name) {
+						case '🍓': remove_role(fullmessage.message, user, '802293656396103700'); break;
+						case '🥝': remove_role(fullmessage.message, user, '833753177698467840'); break;
+						case '🪵': remove_role(fullmessage.message, user, '833758889321300010'); break; // This is wood, for some reason
+					}
+				break;
+
+				case '833766769155899443': // Restrict access
+					switch(messageReaction.emoji.name) {
+						case '🍈': remove_role(fullmessage.message, user, '810923161079644161'); break;
+						case '🍋': remove_role(fullmessage.message, user, '809853738080534558'); break;
+						case '👻': remove_role(fullmessage.message, user, '777964201255501855'); break; 
+					}
+				break;
+
+				case '833766812012904448': // Districts
+					switch(messageReaction.emoji.name) {
+						case 'botdanish': remove_role(fullmessage.message, user, '776119639880106025'); break;
+						case 'Kerchow': remove_role(fullmessage.message, user, '776119791215050802'); break;
+						case 'pinapl': remove_role(fullmessage.message, user, '776118809839927317'); break; 
+						case 'bot_h': remove_role(fullmessage.message, user, '776119931934474315'); break; 
+						case 'botvibe': remove_role(fullmessage.message, user, '776119551250792459'); break; 
+						case 'botcry': remove_role(fullmessage.message, user, '776129405491347507'); break; // Oceans District
+						case 'botbridge': remove_role(fullmessage.message, user, '776129887449907230'); break; 
+						case 'botbot': remove_role(fullmessage.message, user, '776120277615902720'); break; 
+						case 'cbotmagenta': remove_role(fullmessage.message, user, '776129262980956170'); break; 
+						case 'botcatpink': remove_role(fullmessage.message, user, '776128714752524289'); break; 
+						case 'dougdimmabot': remove_role(fullmessage.message, user, '776129824397328396'); break; 
+						case 'bot4': remove_role(fullmessage.message, user, '776119435966283806'); break; 
+					}
+				break;
+			}
+		})
+		.catch(error => {
+			console.log('Something went wrong when fetching the message: ', error);
+		});
+	}
 });
 
 // Listen for messages
