@@ -93,7 +93,8 @@ client.on("messageReactionAdd", function(messageReaction, user) {
 					switch(messageReaction.emoji.name) {
 						case '🍈': add_role(fullmessage.message, user, '810923161079644161'); break;
 						case '🍋': add_role(fullmessage.message, user, '809853738080534558'); break;
-						case '👻': add_role(fullmessage.message, user, '777964201255501855'); break; 
+						case '👻': add_role(fullmessage.message, user, '777964201255501855'); break;
+						case '🍎': add_role(fullmessage.message, user, '836624845256917023'); break; 
 					}
 				break;
 
@@ -158,6 +159,7 @@ client.on("messageReactionRemove", function(messageReaction, user) {
 						case '🍈': remove_role(fullmessage.message, user, '810923161079644161'); break;
 						case '🍋': remove_role(fullmessage.message, user, '809853738080534558'); break;
 						case '👻': remove_role(fullmessage.message, user, '777964201255501855'); break; 
+						case '🍎': remove_role(fullmessage.message, user, '836624845256917023'); break; 
 					}
 				break;
 
