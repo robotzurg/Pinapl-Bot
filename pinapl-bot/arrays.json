@@ -1,0 +1,12 @@
+{
+	"crateChance": [
+		{ "item": "pinapl", "weight": 40 },  
+		{ "item": "tricky", "weight": 25 },
+		{ "item": "king", "weight": 5 }
+	],
+
+    "trickyChance": [
+        { "item": "give", "weight": 50 },
+        { "item": "take", "weight": 50 }
+    ]
+}
