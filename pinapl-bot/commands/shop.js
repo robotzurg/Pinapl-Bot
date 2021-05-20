@@ -3,9 +3,10 @@ const Discord = require('discord.js');
 
 module.exports = {
 	name: 'shop',
-	type: 'Shop',
     description: 'See whats in the shop!',
-	execute(message) {
+    options: [],
+    admin: false,
+	execute(interaction) {
         const shopItemArray = db.shop.keyArray();
 
         const shopEmbed = new Discord.MessageEmbed()
@@ -19,6 +20,6 @@ module.exports = {
             shopEmbed.addField(`${i_emoji} ${i_name} ${i_emoji}`, `Description: **${i_desc}**\nPrice: **${i_cost}**`, true);
         }
 
-        message.channel.send(shopEmbed);
+        interaction.editReply(shopEmbed);
 	},
 };

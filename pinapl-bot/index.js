@@ -10,8 +10,12 @@ const { crateChance, trickyChance } = require('./arrays.json');
 function randomNumber(min, max) {  
     return Math.random() * (max - min) + min; 
 }  
+// create a new Discord client and give it some variables
+const { Client, Intents } = require('discord.js');
+const myIntents = new Intents();
+myIntents.add('GUILD_PRESENCES', 'GUILD_MEMBERS');
 
-const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS], partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 client.commands = new Discord.Collection();
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 const cooldowns = new Discord.Collection();
@@ -30,11 +34,43 @@ let intervalTime = randomNumber(2.16e+7, 4.32e+7);
 let doCooldown = true;
 console.log(intervalTime);
 
-client.once('ready', () => {
-	console.log('Ready!');
-	const date = new Date().toLocaleTimeString().replace("/.*(d{2}:d{2}:d{2}).*/", "$1");
+client.once('ready', async () => {
+    const data = [];
+	const admin_list = [];
+	let permissions;
+    client.commands.forEach(function(value, key) {
+        data.push({
+            name: key,
+            description: value.description,
+            options: value.options,
+			defaultPermission: !value.admin,
+        });
+		if (value.admin === true) {
+			admin_list.push(key);
+		}
+    });
+    await client.guilds.cache.get('771373425734320159')?.commands.set(data);
+	let perm_command;
+	const command_list = await client.guilds.cache.get('771373425734320159')?.commands.cache.array();
+	for (let i = 0; i < command_list.length; i++) {
+		if (admin_list.includes(command_list[i].name)) {
+			perm_command = await client.guilds.cache.get('771373425734320159')?.commands.fetch(command_list[i].id);
+			permissions = [
+				{
+					id: '816362263316529215',
+					type: 'ROLE',
+					permission: true,
+				},
+			];
+			await perm_command.setPermissions(permissions);
+		}
+	}
+
+    console.log('Ready!');
+    const date = new Date().toLocaleTimeString().replace("/.*(d{2}:d{2}:d{2}).*/", "$1");
     console.log(date);
 });
+
 	
 const myFunction = function() {
 	const channel = client.channels.cache.get('771373426664275980');
@@ -71,12 +107,28 @@ cron.schedule('00 11 * * *', () => {
     scheduled: true,
 });
 
+// Listen for interactions (INTERACTION COMMAND HANDLER)
+client.on('interaction', async interaction => {
+	if (!interaction.isCommand()) return;
+
+    const command = client.commands.get(interaction.commandName);
+    await interaction.defer();
+
+    try {
+        await command.execute(interaction, client);
+    } catch (error) {
+        await console.error(error);
+        await interaction.reply(`There was an error trying to execute that command!`);
+    }
+});
+
 //Listen for people joining
 client.on('guildMemberAdd', (guildMember) => {
 	db.balances.set(guildMember.id, 0);
 });
 
 client.on("messageReactionAdd", function(messageReaction, user) {
+	console.log('added');
 	if (messageReaction.message.id === '833766691740844052' || messageReaction.message.id === '833766713862127626' || messageReaction.message.id === '833766740893892610' ||
 	messageReaction.message.id === '833766769155899443' || messageReaction.message.id === '833766812012904448') {
 
@@ -206,7 +258,7 @@ client.on("messageReactionRemove", function(messageReaction, user) {
 });
 
 // Listen for messages
-client.on('message', async message => {
+client.on('message', message => {
 
     let args = message.content.slice(prefix.length).trim().split(/ +/);
     let commandName = args.shift().toLowerCase();
@@ -263,29 +315,6 @@ client.on('message', async message => {
 	}	
 
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
-
-	if (message.content === '!collect' || message.content === '!work') {
-		if (db.workList.get('workerList').includes(parseInt(message.author.id))) return message.channel.send('You feel pretty tired... You won\'t be able to work for a while.');
-		message.channel.send('You work diligently and get 15 <:pp:772971222119612416> for your hard work. Good job!\nYou won\'t be able to mine for a while.');
-		db.balances.math(message.author.id, '+', 15);
-		db.workList.push('workerList', parseInt(message.author.id));
-		if (db.workList.has(message.author.id)) {
-			db.workList.set(message.author.id, db.workList.get(message.author.id, 'streak') + 1, 'streak');
-			db.workList.set(message.author.id, true, 'worked');
-			let num = db.workList.get(message.author.id, 'streak');
-
-			if (num % 5 == 0) {
-				message.channel.send('You\'ve worked 5 days in a row! Here\'s your bonus. 100 <:pp:772971222119612416>!');
-				db.workList.set(message.author.id, 0, 'streak');
-				db.balances.math(message.author.id, '+', 100);
-			}
-		} else {
-			db.workList.set(message.author.id, {
-				streak: 1,
-				worked: true,
-			});
-		}
-	}
 
 	const command = client.commands.get(commandName) ||	client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
 	if (!command) return;

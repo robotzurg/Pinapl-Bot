@@ -1,25 +1,41 @@
 const db = require('../db.js');
-const { capitalize } = require('../func.js');
 
 module.exports = {
 	name: 'editshopitem',
-	aliases: ['editshopitem', 'esi'],
-	type: 'Admin',
     description: 'Edit an item in the shop.',
-	args: true,
-	usage: `<name> | <value> | <data>`,
-	execute(message, args) {
-        if (message.member.hasPermission('ADMINISTRATOR') || message.author.id === '122568101995872256') {
-			args[0] = capitalize(args[0]);
-            if (!db.shop.has(args[0])) return message.channel.send('Item does not exist!');
+	options: [
+        {
+            name: 'name',
+            type: 'STRING',
+            description: 'The name of the item being edited.',
+            required: true,
+        }, {
+            name: 'value',
+            type: 'STRING',
+            description: 'What part of the item is being edited.',
+            required: true,
+			choices: [
+				{ name: 'Description', value: 'desc' },
+				{ name: 'Cost', value: 'cost' },
+				{ name: 'Emoji', value: 'emoji' },
+			],
+        }, {
+            name: 'data',
+            type: 'STRING',
+            description: 'The new data for the item.',
+            required: true,
+        },
+    ],
+	admin: true,
+	execute(interaction) {
+		if (!db.shop.has(interaction.options[0].value)) return interaction.editReply('Item does not exist!');
 
-			switch(args[1]) {
-				case 'desc': db.shop.set(args[0], args[2], 'desc'); break;
-				case 'cost': db.shop.set(args[0], args[2], 'cost'); break;
-				case 'emoji': db.shop.set(args[0], args[2], 'emoji'); break;
-			}
+		switch(interaction.options[1].value) {
+			case 'desc': db.shop.set(interaction.options[0].value, interaction.options[2].value, 'desc'); break;
+			case 'cost': db.shop.set(interaction.options[0].value, parseInt(interaction.options[2].value), 'cost'); break;
+			case 'emoji': db.shop.set(interaction.options[0].value, interaction.options[2].value, 'emoji'); break;
+		}
 
-            message.channel.send(`Edited ${args[0]}.`);
-        }
+		interaction.editReply(`Edited ${interaction.options[0].value}.`);
 	},
 };

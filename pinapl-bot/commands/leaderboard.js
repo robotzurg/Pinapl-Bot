@@ -3,10 +3,10 @@ const Discord = require('discord.js');
 
 module.exports = {
 	name: 'leaderboard',
-    aliases: ['leaderboard', 'lb'],
-	type: 'Shop',
     description: 'See whats in the shop!',
-	execute(message) {
+	options: [],
+	admin: false,
+	async execute(interaction) {
         // Gives you an array
         const keyArray = db.balances.keyArray();
         let leaderboardArray = [];
@@ -14,12 +14,12 @@ module.exports = {
             leaderboardArray.push([keyArray[i], db.balances.get(keyArray[i])]);
         }
 
-        const yourBalance = db.balances.get(message.author.id);
+        const yourBalance = db.balances.get(interaction.user.id);
         let yourPlacement = 0;
 
         leaderboardArray = leaderboardArray.sort((a, b) => b[1] - a[1]);
         for (let i = 0; i < leaderboardArray.length; i++) {
-            if (leaderboardArray[i][0] === message.author.id) {
+            if (leaderboardArray[i][0] === interaction.user.id) {
                 yourPlacement = i + 1;
             }
         }
@@ -29,7 +29,9 @@ module.exports = {
         let username;
 
         for (let i = 0; i < leaderboardArray.length; i++) {
-            username = message.guild.members.cache.get(leaderboardArray[i][0]).displayName;
+            console.log(leaderboardArray[i][0]);
+            username = await interaction.guild.members.fetch(leaderboardArray[i][0]);
+            username = username.displayName;
             embedLBArray.push(`**${i + 1}**. <:pp:772971222119612416> **${leaderboardArray[i][1]}**  ${username}`);
         }
 
@@ -39,9 +41,10 @@ module.exports = {
 
         .setColor('#ffff00')
         .setTitle(`Pinapl's Murder Royale Leaderboard`)
-        .setDescription(embedLBArray)
-        .addField('══════════════════════════', `**${yourPlacement}**. <:pp:772971222119612416> **${yourBalance}** ${message.member.displayName}`);
+        .setDescription(embedLBArray);
+        console.log(interaction.member);
+        leaderboard.addField('══════════════════════════', `**${yourPlacement}**. <:pp:772971222119612416> **${yourBalance}** ${interaction.member.displayName}`);
 
-        message.channel.send(leaderboard);
+        interaction.editReply(leaderboard);
 	},
 };

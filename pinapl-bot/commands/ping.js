@@ -1,9 +1,9 @@
 module.exports = {
 	name: 'ping',
-	type: 'Bot',
-    description: 'Ping pong!',
-	usage: false,
-	execute(message) {
-        message.channel.send('Ping!');
+	description: 'Ping the bot, mostly for checking if its alive. You don\'t need to use this.',
+	options: [],
+	admin: false,
+	execute(interaction, client) {
+		interaction.editReply(`Pong. ${client.ws.ping}ms`);
 	},
 };
