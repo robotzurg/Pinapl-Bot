@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const fs = require('fs');
-const { prefix, token } = require('./config.json');
+const { token } = require('./config.json');
 const db = require("./db.js");
 const cron = require("node-cron");
 const { add_role, remove_role, weighted_random } = require('./func');
@@ -31,7 +31,6 @@ for (const file of commandFiles) {
 
 let crateUsrID;
 let intervalTime = randomNumber(2.16e+7, 4.32e+7);
-let doCooldown = true;
 console.log(intervalTime);
 
 client.once('ready', async () => {
@@ -111,8 +110,30 @@ cron.schedule('00 11 * * *', () => {
 client.on('interaction', async interaction => {
 	if (!interaction.isCommand()) return;
 
+	await interaction.defer();
+
     const command = client.commands.get(interaction.commandName);
-    await interaction.defer();
+
+	if (!cooldowns.has(command.name)) {
+        cooldowns.set(command.name, new Discord.Collection());
+    }
+    
+    const now = Date.now();
+    const timestamps = cooldowns.get(command.name);
+    const cooldownAmount = (command.cooldown || 0) * 1000;
+
+    if (timestamps.has(interaction.user.id)) {
+        const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount;
+
+        if (now < expirationTime) {
+            const timeLeft = (expirationTime - now) / 1000;
+            return interaction.editReply(`please wait ${timeLeft.toFixed(0)} more second(s) before reusing the \`${command.name}\` command.`);
+        }
+
+    }
+
+	timestamps.set(interaction.user.id, now);
+	setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount); 
 
     try {
         await command.execute(interaction, client);
@@ -128,7 +149,6 @@ client.on('guildMemberAdd', (guildMember) => {
 });
 
 client.on("messageReactionAdd", function(messageReaction, user) {
-	console.log('added');
 	if (messageReaction.message.id === '833766691740844052' || messageReaction.message.id === '833766713862127626' || messageReaction.message.id === '833766740893892610' ||
 	messageReaction.message.id === '833766769155899443' || messageReaction.message.id === '833766812012904448') {
 
@@ -146,8 +166,10 @@ client.on("messageReactionAdd", function(messageReaction, user) {
 
 				case '833766713862127626': // Ping Preference
 					switch(messageReaction.emoji.name) {
-						case 'botanon': add_role(fullmessage.message, user, '771383105252491306'); break;
-						case 'botglad': add_role(fullmessage.message, user, '772870869583527947'); break;
+						case 'botsleep': add_role(fullmessage.message, user, '771383105252491306'); break;
+						case 'botelite': add_role(fullmessage.message, user, '772870869583527947'); break;
+						case 'botjeff': add_role(fullmessage.message, user, '844273916101132338'); break;
+						case 'botwoke': add_role(fullmessage.message, user, '844274054193610843'); break;
 					}
 				break;
 
@@ -211,8 +233,10 @@ client.on("messageReactionRemove", function(messageReaction, user) {
 
 				case '833766713862127626': // Ping Preference
 					switch(messageReaction.emoji.name) {
-						case 'botanon': remove_role(fullmessage.message, user, '771383105252491306'); break;
-						case 'botglad': remove_role(fullmessage.message, user, '772870869583527947'); break;
+						case 'botsleep': remove_role(fullmessage.message, user, '771383105252491306'); break;
+						case 'botelite': remove_role(fullmessage.message, user, '772870869583527947'); break;
+						case 'botjeff': remove_role(fullmessage.message, user, '844273916101132338'); break;
+						case 'botwoke': remove_role(fullmessage.message, user, '844274054193610843'); break;
 					}
 				break;
 
@@ -260,17 +284,6 @@ client.on("messageReactionRemove", function(messageReaction, user) {
 // Listen for messages
 client.on('message', message => {
 
-    let args = message.content.slice(prefix.length).trim().split(/ +/);
-    let commandName = args.shift().toLowerCase();
-
-    if (args.length > 1) {
-		args = message.content.slice(prefix.length).trim().split(/ \| +/);
-        const firstargs = args[0].split(/ +/);
-        commandName = firstargs.shift().toLowerCase();  
-        args[0] = args[0].slice(commandName.length + 1).trim(); 
-    }
-	if (message.content.includes('Invalid amount to bet!')) doCooldown = false;
-
 	if (message.content.includes('React first to claim')) {
 		message.react('🔑');
 
@@ -313,54 +326,6 @@ client.on('message', message => {
 				}
 			});
 	}	
-
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
-
-	const command = client.commands.get(commandName) ||	client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
-	if (!command) return;
-
-    if (command.args && !args.length) {
-        let reply = `You didn't provide any arguments, ${message.author}!`;
-
-		if (command.usage) {
-			reply += `\nThe proper usage would be: \`!${command.name} ${command.usage}\``;
-		}
-
-		return message.channel.send(reply);	
-    }
-
-    if (!cooldowns.has(command.name)) {
-        cooldowns.set(command.name, new Discord.Collection());
-    }
-    
-    const now = Date.now();
-    const timestamps = cooldowns.get(command.name);
-    const cooldownAmount = (command.cooldown || 0) * 1000;
-
-    if (timestamps.has(message.author.id)) {
-        const expirationTime = timestamps.get(message.author.id) + cooldownAmount;
-
-        if (now < expirationTime) {
-            const timeLeft = (expirationTime - now) / 1000;
-            return message.reply(`please wait ${timeLeft.toFixed(0)} more second(s) before reusing the \`${command.name}\` command.`);
-        }
-
-    }
-
-	if (doCooldown === false) {
-		timestamps.set(message.author.id, now);
-		setTimeout(() => timestamps.delete(message.author.id), cooldownAmount); 
-	} else {
-		doCooldown = true;
-	}
-
-    try {
-        command.execute(message, args);
-    } catch (error) {
-        console.error(error);
-        message.reply(`There was an error trying to execute that command!\nMessage sent: \`${message.content}\``);
-    }
-
 });
 
 // login to Discord

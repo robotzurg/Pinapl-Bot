@@ -16,7 +16,7 @@ module.exports = {
 			let num = db.workList.get(interaction.user.id, 'streak');
 
 			if (num % 5 == 0) {
-				interaction.followUp('You\'ve worked 5 days in a row! Here\'s your bonus. 100 <:pp:772971222119612416>!');
+				interaction.channel.send('You\'ve worked 5 days in a row! Here\'s your bonus. 100 <:pp:772971222119612416>!');
 				db.workList.set(interaction.user.id, 0, 'streak');
 				db.balances.math(interaction.user.id, '+', 100);
 			}

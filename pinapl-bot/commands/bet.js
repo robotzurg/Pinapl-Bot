@@ -15,6 +15,7 @@ module.exports = {
         description: 'Number of pp to bet!',
         required: true,
     }],
+    cooldown: 1800,
 	execute(interaction) {
         let bet_amt = parseInt(interaction.options[0].value);
         const rand_amt_plr = Math.round(randomNumber(0, 50));
