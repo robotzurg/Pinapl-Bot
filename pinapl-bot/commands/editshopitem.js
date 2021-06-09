@@ -24,17 +24,36 @@ module.exports = {
             type: 'STRING',
             description: 'The new data for the item.',
             required: true,
+        }, {
+            name: 'shop_type',
+            type: 'STRING',
+            description: 'What shop the item goes in.',
+            required: true,
+            choices: [
+				{ name: 'Pinapl Points', value: 'pp' },
+				{ name: 'Murder Money', value: 'mm' },
+			],
         },
     ],
 	admin: true,
 	execute(interaction) {
-		if (!db.shop.has(interaction.options[0].value)) return interaction.editReply('Item does not exist!');
+        if (interaction.options[3].value === 'pp') {
+            if (!db.shop.has(interaction.options[0].value)) return interaction.editReply('Item does not exist!');
 
-		switch(interaction.options[1].value) {
-			case 'desc': db.shop.set(interaction.options[0].value, interaction.options[2].value, 'desc'); break;
-			case 'cost': db.shop.set(interaction.options[0].value, parseInt(interaction.options[2].value), 'cost'); break;
-			case 'emoji': db.shop.set(interaction.options[0].value, interaction.options[2].value, 'emoji'); break;
-		}
+            switch(interaction.options[1].value) {
+                case 'desc': db.shop.set(interaction.options[0].value, interaction.options[2].value, 'desc'); break;
+                case 'cost': db.shop.set(interaction.options[0].value, parseInt(interaction.options[2].value), 'cost'); break;
+                case 'emoji': db.shop.set(interaction.options[0].value, interaction.options[2].value, 'emoji'); break;
+            }
+        } else {
+            if (!db.mmshop.has(interaction.options[0].value)) return interaction.editReply('Item does not exist!');
+
+            switch(interaction.options[1].value) {
+                case 'desc': db.mmshop.set(interaction.options[0].value, interaction.options[2].value, 'desc'); break;
+                case 'cost': db.mmshop.set(interaction.options[0].value, parseInt(interaction.options[2].value), 'cost'); break;
+                case 'emoji': db.mmshop.set(interaction.options[0].value, interaction.options[2].value, 'emoji'); break;
+            }
+        }
 
 		interaction.editReply(`Edited ${interaction.options[0].value}.`);
 	},

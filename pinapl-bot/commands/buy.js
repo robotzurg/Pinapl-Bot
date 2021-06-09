@@ -1,36 +1,45 @@
 const db = require('../db.js');
-const { add_role, weighted_random } = require('../func.js');
-const { crateChance } = require('../arrays.json');
+const { add_role, weighted_random, capitalize } = require('../func.js');
+const { crateChance, shopItemsPP } = require('../arrays.json');
 
 module.exports = {
 	name: 'buy',
     description: 'Buy an item from the shop!',
-    options: [{
-        name: 'item',
-        type: 'STRING',
-        description: 'The item that you would like to purchase.',
-        required: true,
-        choices: [
-            { name: 'Banana', value: 'Banana' },
-            { name: 'Fortune', value: 'Fortune' },
-            { name: 'Stock', value: 'Stock' },
-            { name: 'Grape', value: 'Grape' },
-            { name: 'Ping', value: 'Ping' },
-            { name: 'Bump', value: 'Bump' },
-            { name: 'Bone', value: 'Bone' },
-            { name: 'Gold Crown', value: 'Gold Crown' },
-            { name: 'Crate', value: 'Crate' },
-        ],
-    }],
+    options: [
+        {
+            name: 'item',
+            type: 'STRING',
+            description: 'The item that you would like to purchase.',
+            required: true,
+        },
+    ],
     admin: false,
 	execute(interaction, client) {
-        const item_name = interaction.options[0].value;
-        const item_obj = db.shop.get(item_name);
-        let balance = db.balances.get(interaction.user.id);
+        const item_name = capitalize(interaction.options[0].value);
+        let shop_type;
+        if (shopItemsPP.includes(item_name)) {
+            shop_type = 'pp';
+        } else {
+            shop_type = 'mm';
+        }
+        let item_obj;
+        let balance;
+        if (shop_type === 'pp') {
+            balance = db.balances.get(interaction.user.id);
+            item_obj = db.shop.get(item_name);
+        } else {
+            balance = db.mmbalances.get(interaction.user.id);
+            item_obj = db.mmshop.get(item_name);
+        }
 
         if (balance >= item_obj.cost) {
             balance -= item_obj.cost;
-            db.balances.set(interaction.user.id, balance);
+            if (shop_type === 'pp') {
+                db.balances.set(interaction.user.id, balance);
+            } else {
+                db.mmbalances.set(interaction.user.id, balance);
+            }
+            
             const purchase_channel = interaction.guild.channels.cache.get('814788744573878312');
 
             if (item_name != 'Banana' && item_name != 'Vip' && item_name != 'Grape' && item_name != 'Crate' && 
@@ -58,12 +67,20 @@ module.exports = {
                 }
             }
             if (item_name != 'Crate') {
-                return interaction.editReply(`${item_name} has been purchased!\nIf this is an item that requires manual input from Pinapl, you will see its effect once he gets to it.\n\`New balance: ${balance}\`<:pp:772971222119612416>`);
+                if (shop_type === 'pp') {
+                    return interaction.editReply(`${item_name} has been purchased!\nIf this is an item that requires manual input from Pinapl, you will see its effect once he gets to it.\n\`New balance: ${balance}\`<:pp:772971222119612416>`);
+                } else {
+                    return interaction.editReply(`${item_name} has been purchased!\nIf this is an item that requires manual input from Pinapl, you will see its effect once he gets to it.\n\`New balance: ${balance}\`<:mm:839540228859625522>`);
+                }
             } else {
                 return interaction.editReply(`Crate purchased.`);
             }
         } else {
-            return interaction.editReply(`You don't have enough <:pp:772971222119612416> to buy this.\n\`Current balance: ${balance}\`<:pp:772971222119612416>`);
+            if (shop_type === 'pp') {
+                return interaction.editReply(`You don't have enough <:pp:772971222119612416> to buy this.\n\`Current balance: ${balance}\`<:pp:772971222119612416>`);
+            } else {
+                return interaction.editReply(`You don't have enough <:mm:839540228859625522> to buy this.\n\`Current balance: ${balance}\`<:mm:839540228859625522>`);
+            }
         }
 	},
 };
