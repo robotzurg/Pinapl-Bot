@@ -7,18 +7,23 @@ module.exports = {
     admin: false,
     execute(interaction) {
         if (db.workList.get('workerList').includes(parseInt(interaction.user.id))) return interaction.editReply('You feel pretty tired... You won\'t be able to work for a while.');
-		interaction.editReply('You work diligently and get 15 <:pp:772971222119612416> for your hard work. Good job!\nYou won\'t be able to mine for a while.');
-		db.balances.math(interaction.user.id, '+', 15);
+		db.balances.math(interaction.user.id, '+', 10);
 		db.workList.push('workerList', parseInt(interaction.user.id));
+
+		let num = 1;
+
 		if (db.workList.has(interaction.user.id)) {
 			db.workList.set(interaction.user.id, db.workList.get(interaction.user.id, 'streak') + 1, 'streak');
 			db.workList.set(interaction.user.id, true, 'worked');
-			let num = db.workList.get(interaction.user.id, 'streak');
+			num = db.workList.get(interaction.user.id, 'streak');
 
-			if (num % 5 == 0) {
-				interaction.channel.send('You\'ve worked 5 days in a row! Here\'s your bonus. 100 <:pp:772971222119612416>!');
+			if (num % 7 == 0) {
+				interaction.channel.send('**You\'ve worked 7 days in a row! Here\'s your bonus. 50 <:pp:772971222119612416>!**');
+				db.balances.math(interaction.user.id, '+', 50);
+			} else if (num % 30 == 0) {
+				interaction.channel.send('**You\'ve worked 30 days in a row!!! Here\'s your bonus, you amazing employee! 500 <:pp:772971222119612416>!**');
+				db.balances.math(interaction.user.id, '+', 500);
 				db.workList.set(interaction.user.id, 0, 'streak');
-				db.balances.math(interaction.user.id, '+', 100);
 			}
 		} else {
 			db.workList.set(interaction.user.id, {
@@ -26,5 +31,8 @@ module.exports = {
 				worked: true,
 			});
 		}
+
+		interaction.editReply('You work diligently and get **10** <:pp:772971222119612416> for your hard work. Good job!\nYou won\'t be able to mine until the next work reset.' + 
+		`\n\n**Streak progress:** Day ${num} out of 30 ${(num < 7) ? `(${7 - num} day(s) until next reward!)` : `(${30 - num} day(s) until next reward!)`}`);
     },
 };

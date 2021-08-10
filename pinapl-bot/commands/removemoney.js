@@ -28,9 +28,9 @@ module.exports = {
 	admin: true,
 	async execute(interaction) {
 		let args = [];
-		args[0] = interaction.options[0].value;
-		args[1] = interaction.options[1].value;
-		args[2] = interaction.options[2].value;
+		args[0] = interaction.options._hoistedOptions[0].value;
+		args[1] = interaction.options._hoistedOptions[1].value;
+		args[2] = interaction.options._hoistedOptions[2].value;
 
 		if (args[2] === 'pp') {
 			let prevBalance = db.balances.get(args[0]);

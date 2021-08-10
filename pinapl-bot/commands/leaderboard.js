@@ -45,7 +45,7 @@ module.exports = {
         console.log(interaction.member);
         leaderboard.addField('══════════════════════════', `**${yourPlacement}**. <:pp:772971222119612416> **${yourBalance}** ${interaction.member.displayName}`);
 
-        interaction.editReply(leaderboard);*/
+        interaction.editReply({ embeds: [leaderboard] });*/
 	interaction.editReply('This command is temporarily disabled.');
 	},
 };

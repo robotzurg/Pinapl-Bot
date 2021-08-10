@@ -50,7 +50,7 @@ client.once('ready', async () => {
     });
     await client.guilds.cache.get('771373425734320159')?.commands.set(data);
 	let perm_command;
-	const command_list = await client.guilds.cache.get('771373425734320159')?.commands.cache.array();
+	const command_list = await client.guilds.cache.get('771373425734320159')?.commands.cache.keys();
 	for (let i = 0; i < command_list.length; i++) {
 		if (admin_list.includes(command_list[i].name)) {
 			perm_command = await client.guilds.cache.get('771373425734320159')?.commands.fetch(command_list[i].id);
@@ -111,10 +111,10 @@ cron.schedule('00 11 * * *', () => {
 });
 
 // Listen for interactions (INTERACTION COMMAND HANDLER)
-client.on('interaction', async interaction => {
+client.on('interactionCreate', async interaction => {
 	if (!interaction.isCommand()) return;
 
-	await interaction.defer();
+	await interaction.deferReply();
 
     const command = client.commands.get(interaction.commandName);
 
@@ -286,7 +286,7 @@ client.on("messageReactionRemove", function(messageReaction, user) {
 });
 
 // Listen for messages
-client.on('message', message => {
+client.on('messageCreate', message => {
 
 	// This bottom block of code is the entire hunger games sim code. Be careful when messing with it.
 	if (message.content.includes('The games will now begin!') && (message.author.id === '818709319084015616' || message.author.id === '122568101995872256')) {

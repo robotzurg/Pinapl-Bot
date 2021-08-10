@@ -17,7 +17,8 @@ module.exports = {
         }],
     admin: false,
 	execute(interaction) {
-        const shopType = interaction.options[0].name;
+        const shopType = interaction.options._subcommand;
+        console.log(shopType);
         let shopItemArray;
 
         if (shopType === 'pp') {
@@ -48,6 +49,6 @@ module.exports = {
         }
         
 
-        interaction.editReply(shopEmbed);
+        interaction.editReply({ embeds: [shopEmbed] });
 	},
 };

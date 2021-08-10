@@ -37,11 +37,11 @@ module.exports = {
     ],
 	admin: true,
 	execute(interaction) {
-        const item_name = interaction.options[0].value;
-        const cost = interaction.options[1].value;
-        const desc = interaction.options[2].value;
-        const emoji = interaction.options[3].value;
-        const shop_type = interaction.options[4].value;
+        const item_name = interaction.options._hoistedOptions[0].value;
+        const cost = interaction.options._hoistedOptions[1].value;
+        const desc = interaction.options._hoistedOptions[2].value;
+        const emoji = interaction.options._hoistedOptions[3].value;
+        const shop_type = interaction.options._hoistedOptions[4].value;
 
         if (shop_type === 'pp') {
             db.shop.set(item_name, {

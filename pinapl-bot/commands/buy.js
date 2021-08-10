@@ -15,7 +15,7 @@ module.exports = {
     ],
     admin: false,
 	execute(interaction, client) {
-        const item_name = capitalize(interaction.options[0].value);
+        const item_name = capitalize(interaction.options._hoistedOptions[0].value);
         let shop_type;
         if (shopItemsPP.includes(item_name)) {
             shop_type = 'pp';

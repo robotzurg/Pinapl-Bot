@@ -22,12 +22,12 @@ module.exports = {
     ],
 	admin: true,
 	execute(interaction) {
-        if (interaction.options[1].value === 'pp') {
-            db.shop.delete(interaction.options[0].value);
-            interaction.editReply(`Removed ${interaction.options[0].value} from the pp shop.`);
+        if (interaction.options._hoistedOptions[1].value === 'pp') {
+            db.shop.delete(interaction.options._hoistedOptions[0].value);
+            interaction.editReply(`Removed ${interaction.options._hoistedOptions[0].value} from the pp shop.`);
         } else {
-            db.mmshop.delete(interaction.options[0].value);
-            interaction.editReply(`Removed ${interaction.options[0].value} from the mm shop.`);
+            db.mmshop.delete(interaction.options._hoistedOptions[0].value);
+            interaction.editReply(`Removed ${interaction.options._hoistedOptions[0].value} from the mm shop.`);
         }
 	},
 };
