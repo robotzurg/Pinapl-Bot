@@ -7,7 +7,7 @@ module.exports = {
 	options: [],
 	admin: false,
 	async execute(interaction) {
-        // Gives you an array
+        /*// Gives you an array
         const keyArray = db.balances.keyArray();
         let leaderboardArray = [];
         for (let i = 0; i < keyArray.length; i++) {
@@ -45,6 +45,7 @@ module.exports = {
         console.log(interaction.member);
         leaderboard.addField('══════════════════════════', `**${yourPlacement}**. <:pp:772971222119612416> **${yourBalance}** ${interaction.member.displayName}`);
 
-        interaction.editReply(leaderboard);
+        interaction.editReply(leaderboard);*/
+	interaction.editReply('This command is temporarily disabled.');
 	},
 };
