@@ -17,7 +17,7 @@ module.exports = {
     }],
     cooldown: 1800,
 	execute(interaction) {
-        let bet_amt = parseInt(interaction.options._hoistedOptions._hoistedOptions[0].value);
+        let bet_amt = parseInt(interaction.options._hoistedOptions[0].value);
         const rand_amt_plr = Math.round(randomNumber(0, 50));
         const rand_amt_bot = Math.round(randomNumber(0, 50));
         let new_amt;

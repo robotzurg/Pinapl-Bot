@@ -13,7 +13,7 @@ function randomNumber(min, max) {
 // create a new Discord client and give it some variables
 const { Client, Intents } = require('discord.js');
 const myIntents = new Intents();
-myIntents.add('GUILD_PRESENCES', 'GUILD_MEMBERS', 'GUILD_PRESENCES');
+myIntents.add('GUILD_PRESENCES', 'GUILD_MEMBERS', 'GUILD_PRESENCES', 'GUILD_MESSAGE_REACTIONS');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, 
                             Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_PRESENCES], partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
@@ -287,7 +287,7 @@ client.on("messageReactionRemove", function(messageReaction, user) {
 });
 
 // Listen for messages
-client.on('messageCreate', message => {
+client.on('messageCreate', async message => {
 
 	// This bottom block of code is the entire hunger games sim code. Be careful when messing with it.
 	if (message.content.includes('The games will now begin!') && (message.author.id === '818709319084015616' || message.author.id === '122568101995872256')) {
@@ -696,7 +696,8 @@ client.on('messageCreate', message => {
 			crateUsrID = user.id;
 			return ['🔑'].includes(reaction.emoji.name) && (user.id != message.author.id);
 		};
-		message.awaitReactions(filter, { max: 1 })
+
+		await message.awaitReactions({ filter, max: 1 })
 			.then(collected => {
 				const reaction = collected.first();
 		
