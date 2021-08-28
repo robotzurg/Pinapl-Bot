@@ -19,11 +19,12 @@ module.exports = {
     admin: false,
 	async execute(interaction) {
         const taggedUser = await interaction.guild.members.fetch(interaction.options._hoistedOptions[0].value);
-        if (taggedUser === interaction.user) return interaction.editReply('You can\'t send <:pp:772971222119612416> to yourself.');
+        if (taggedUser === interaction.user || interaction.options._hoistedOptions[0].value === interaction.user.id) return interaction.editReply('You can\'t send <:pp:772971222119612416> to yourself.');
         const send_amt = interaction.options._hoistedOptions[1].value;
 
         let authorBal = db.balances.get(interaction.user.id);
         if (authorBal < send_amt) return interaction.editReply(`You don't have this much <:pp:772971222119612416>!\nCurrent balance: ${authorBal}`);
+        if (send_amt <= 0) return interaction.editReply(`You can't send negative money.`);
         let taggedUserBal = db.balances.get(taggedUser.id);
 
         authorBal -= send_amt;

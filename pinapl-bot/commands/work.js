@@ -32,7 +32,7 @@ module.exports = {
 			});
 		}
 
-		interaction.editReply('You work diligently and get **10** <:pp:772971222119612416> for your hard work. Good job!\nYou won\'t be able to mine until the next work reset.' + 
+		interaction.editReply('You work diligently and get **10** <:pp:772971222119612416> for your hard work.\nGood job!\nYou won\'t be able to mine until the next work reset.' + 
 		`\n\n**Streak progress:** Day ${num} out of 30 ${(num < 7) ? `(${7 - num} day(s) until next reward!)` : `(${30 - num} day(s) until next reward!)`}`);
     },
 };

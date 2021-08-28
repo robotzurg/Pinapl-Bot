@@ -107,6 +107,16 @@ cron.schedule('00 11 * * *', () => {
 	}
 
 	db.workList.set('workerList', []);
+	
+	//Taxes
+	let bal_arr = db.balances.keyArray();
+	for (let i = 0; i < bal_arr.length; i++) {
+		db.balances.math(bal_arr[i], '-', 10);
+		db.balances.math('837709599544967180', '+', 10);
+	}
+	
+	const announce_channel = client.channels.cache.get('773925702881509416');
+	announce_channel.send('Taxes have been collected for today! Everyone has had 10pp taken and given to The Boss.\nRemember, all proceeds go to him.')
 }, {
     scheduled: true,
 });
@@ -155,7 +165,7 @@ client.on('guildMemberAdd', (guildMember) => {
 
 client.on("messageReactionAdd", function(messageReaction, user) {
 	if (messageReaction.message.id === '833766691740844052' || messageReaction.message.id === '833766713862127626' || messageReaction.message.id === '833766740893892610' ||
-	messageReaction.message.id === '833766769155899443' || messageReaction.message.id === '833766812012904448') {
+	messageReaction.message.id === '833766769155899443' || messageReaction.message.id === '833766812012904448' || messageReaction.message.id === '879762357092491334') {
 
 		messageReaction.fetch()
 		.then(fullmessage => {
@@ -211,7 +221,7 @@ client.on("messageReactionAdd", function(messageReaction, user) {
 						case 'bot4': add_role(fullmessage.message, user, '776119435966283806'); break; 
 					}
 				break;
-			}
+			}	
 
 		})	
 		.catch(error => {
@@ -222,7 +232,7 @@ client.on("messageReactionAdd", function(messageReaction, user) {
 
 client.on("messageReactionRemove", function(messageReaction, user) {
 	if (messageReaction.message.id === '833766691740844052' || messageReaction.message.id === '833766713862127626' || messageReaction.message.id === '833766740893892610' ||
-	messageReaction.message.id === '833766769155899443' || messageReaction.message.id === '833766812012904448') {
+	messageReaction.message.id === '833766769155899443' || messageReaction.message.id === '833766812012904448' || messageReaction.message.id === '879762357092491334') {
 
 		messageReaction.fetch()
 		.then(fullmessage => {
@@ -707,7 +717,7 @@ client.on('messageCreate', async message => {
 					if (message.content.includes('PINAPL CRATE')) {
 						crateAmt = Math.round(randomNumber(5, 30));
 						message.channel.send(`<@${crateUsrID}> has claimed the crate.\nYou find **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
-						db.balances.math(crateUsrID, '+', crateAmt);
+						db.balances.math('837709599544967180', '+', crateAmt);
 
 					} else if (message.content.includes('TRICKY CRATE')) {
 						let chance = weighted_random(trickyChance);
@@ -715,7 +725,7 @@ client.on('messageCreate', async message => {
 						if (chance === 'give') {
 							crateAmt = Math.round(randomNumber(20, 50));
 							message.channel.send(`<@${crateUsrID}> has claimed the crate.\nYou find **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
-							db.balances.math(crateUsrID, '+', crateAmt);
+							db.balances.math('837709599544967180', '+', crateAmt);
 						} else if (chance === 'take') {
 							crateAmt = Math.round(randomNumber(1, 50));
 							message.channel.send(`<@${crateUsrID}> has claimed the crate.\n A hand comes out of the crate, reaches into your pocket, and steals **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
@@ -725,7 +735,7 @@ client.on('messageCreate', async message => {
 					} else if (message.content.includes('KING CRATE')) {
 						crateAmt = Math.round(randomNumber(50, 500));
 						message.channel.send(`<@${crateUsrID}> has claimed the crate.\nYou find **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
-						db.balances.math(crateUsrID, '+', crateAmt);
+						db.balances.math('837709599544967180', '+', crateAmt);
 
 					}
 
