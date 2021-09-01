@@ -25,6 +25,10 @@ module.exports = {
         if (bet_amt > db.balances.get(interaction.user.id)) {
             return interaction.editReply(`You don't have that much money to bet!\nYour current balance is **${db.balances.get(interaction.user.id)}**<:pp:772971222119612416>.`);
         }
+        
+        if (bet_amt < 0) {
+            return interaction.editReply(`You doofus you can't bet negative money are you TRYING TO SCAM THIS GOOD PINAPL CASINO, I WILL HAVE YOU THROWN OUT FOR YOUR CRIMES`)
+        }
 
         const betEmbed = new Discord.MessageEmbed()
 

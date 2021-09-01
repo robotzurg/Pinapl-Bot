@@ -108,15 +108,6 @@ cron.schedule('00 11 * * *', () => {
 
 	db.workList.set('workerList', []);
 	
-	//Taxes
-	let bal_arr = db.balances.keyArray();
-	for (let i = 0; i < bal_arr.length; i++) {
-		db.balances.math(bal_arr[i], '-', 10);
-		db.balances.math('837709599544967180', '+', 10);
-	}
-	
-	const announce_channel = client.channels.cache.get('773925702881509416');
-	announce_channel.send('Taxes have been collected for today! Everyone has had 10pp taken and given to The Boss.\nRemember, all proceeds go to him.')
 }, {
     scheduled: true,
 });
