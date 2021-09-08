@@ -49,11 +49,11 @@ module.exports = {
                 purchase_channel.send(`<@${interaction.user.id}> has bought the ${item_obj.emoji} **${item_name}** ${item_obj.emoji} item.`);
                 if (item_name === 'Banana') {
 
-                    const bananaRole = client.guilds.cache.find(guild => guild.id === '771373425734320159').roles.cache.find(role => role.name === "🍌Banana");
+                    const bananaRole = client.guilds.cache.find(guild => guild.id === '771373425734320159').roles.cache.find(role => role.name === "🍌Banana Role");
                     interaction.guild.members.fetch(interaction.user).then(a => a.roles.add(bananaRole));
 
                 } else if (item_name === 'Bone') {
-                    add_role(interaction, interaction.user, '840782529824817163');
+                    add_role(interaction, interaction.user, '777964201255501855');
                 } else if (item_name === 'Gold Crown') {
                     add_role(interaction, interaction.user, '839540200908390430');
                 } else if (item_name === 'Crate') {
