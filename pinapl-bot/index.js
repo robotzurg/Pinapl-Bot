@@ -1,3 +1,5 @@
+// I love you Pinapl Bot
+
 const Discord = require('discord.js');
 const fs = require('fs');
 const { token } = require('./config.json');
@@ -10,71 +12,59 @@ const { crateChance, trickyChance, bloodbathEvents, miscEvents, attackEvents, in
 function randomNumber(min, max) {  
     return Math.random() * (max - min) + min; 
 }  
+const { REST } = require('@discordjs/rest');
+const { Routes } = require('discord-api-types/v9');
+
 // create a new Discord client and give it some variables
 const { Client, Intents } = require('discord.js');
 const myIntents = new Intents();
-myIntents.add('GUILD_PRESENCES', 'GUILD_MEMBERS', 'GUILD_PRESENCES', 'GUILD_MESSAGE_REACTIONS');
+myIntents.add('GUILD_PRESENCES', 'GUILD_MEMBERS', 'GUILD_PRESENCES');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, 
                             Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_PRESENCES], partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 client.commands = new Discord.Collection();
+const registerCommands = [];
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-const cooldowns = new Discord.Collection();
 
-// Command Collections
-for (const file of commandFiles) {
-	const command = require(`./commands/${file}`);
-
-	// set a new item in the Collection
-	// with the key as the command name and the value as the exported module
-	client.commands.set(command.name, command);
-}
+// Place your client and guild ids here
+const clientId = '791055052067962891';
+const guildId = '771373425734320159';
 
 let crateUsrID;
 let intervalTime = randomNumber(2.16e+7, 4.32e+7);
+client.cooldowns = new Discord.Collection();
 console.log(intervalTime);
 
-client.once('ready', async () => {
-    const data = [];
-	const admin_list = [];
-	let permissions;
-    client.commands.forEach(function(value, key) {
-        data.push({
-            name: key,
-            description: value.description,
-            options: value.options,
-			defaultPermission: !value.admin,
-        });
-		if (value.admin === true) {
-			admin_list.push(key);
-		}
-    });
-    await client.guilds.cache.get('771373425734320159')?.commands.set(data);
-	let perm_command;
-	const command_list = await client.guilds.cache.get('771373425734320159')?.commands.cache.keys();
-	for (let i = 0; i < command_list.length; i++) {
-		if (admin_list.includes(command_list[i].name)) {
-			perm_command = await client.guilds.cache.get('771373425734320159')?.commands.fetch(command_list[i].id);
-			permissions = [
-				{
-					id: '816362263316529215',
-					type: 'ROLE',
-					permission: true,
-				}, {
-					id: '850097732462706729',
-					type: 'ROLE',
-					permission: true,
-				},
-			];
-			await perm_command.setPermissions(permissions);
-		}
+for (const file of commandFiles) {
+	const command = require(`./commands/${file}`);
+    if (command.type === undefined) {
+        // Slash Commands
+        client.commands.set(command.data.name, command);
+        registerCommands.push(command.data.toJSON());
+    } else {
+        // Context Menu Commands (these have a different structure)
+        client.commands.set(command.name, command);
+        registerCommands.push(command);
+    }
+}
+
+const rest = new REST({ version: '9' }).setToken(token);
+
+(async () => {
+	try {
+		console.log('Started refreshing application (/) commands.');
+
+		await rest.put(
+			Routes.applicationGuildCommands(clientId, guildId),
+			{ body: registerCommands },
+		);
+
+		console.log('Successfully reloaded application (/) commands.');
+	} catch (error) {
+		console.error(error);
 	}
-
-    console.log('Ready!');
-    const date = new Date().toLocaleTimeString().replace("/.*(d{2}:d{2}:d{2}).*/", "$1");
-    console.log(date);
-});
-
+	
+})();
 	
 const myFunction = function() {
 	const channel = client.channels.cache.get('771373426664275980');
@@ -118,28 +108,28 @@ client.on('interactionCreate', async interaction => {
 
 	await interaction.deferReply();
 
-    const command = client.commands.get(interaction.commandName);
+    const command = await client.commands.get(interaction.commandName);
 
-	if (!cooldowns.has(command.name)) {
-        cooldowns.set(command.name, new Discord.Collection());
+	if (!client.cooldowns.has(interaction.commandName)) {
+        client.cooldowns.set(interaction.commandName, new Discord.Collection());
     }
     
     const now = Date.now();
-    const timestamps = cooldowns.get(command.name);
+	client.timestamps = client.cooldowns.get(interaction.commandName);
     const cooldownAmount = (command.cooldown || 0) * 1000;
 
-    if (timestamps.has(interaction.user.id)) {
-        const expirationTime = timestamps.get(interaction.user.id) + cooldownAmount;
+    if (client.timestamps.has(interaction.user.id)) {
+        const expirationTime = client.timestamps.get(interaction.user.id) + cooldownAmount;
 
         if (now < expirationTime) {
             const timeLeft = (expirationTime - now) / 1000;
-            return interaction.editReply(`please wait ${timeLeft.toFixed(0)} more second(s) before reusing the \`${command.name}\` command.`);
+            return interaction.editReply(`please wait ${timeLeft.toFixed(0)} more second(s) before reusing the \`${interaction.commandName}\` command.`);
         }
 
     }
 
-	timestamps.set(interaction.user.id, now);
-	setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount); 
+	client.timestamps.set(interaction.user.id, now);
+	setTimeout(() => client.timestamps.delete(interaction.user.id), cooldownAmount); 
 
     try {
         await command.execute(interaction, client);

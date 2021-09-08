@@ -1,9 +1,10 @@
+const { SlashCommandBuilder } = require('@discordjs/builders');
+
 module.exports = {
-	name: 'ping',
-	description: 'Ping the bot, mostly for checking if its alive. You don\'t need to use this.',
-	options: [],
-	admin: false,
-	execute(interaction, client) {
-		interaction.editReply(`Pong. ${client.ws.ping}ms`);
+	data: new SlashCommandBuilder()
+		.setName('ping')
+		.setDescription('Replies with Pong!'),
+	async execute(interaction) {
+		await interaction.editReply('Pong!');
 	},
 };

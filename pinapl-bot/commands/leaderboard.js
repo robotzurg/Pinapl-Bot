@@ -1,13 +1,14 @@
 const db = require('../db.js');
 const Discord = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
-	name: 'leaderboard',
-    description: 'See whats in the shop!',
-	options: [],
-	admin: false,
+    data: new SlashCommandBuilder()
+        .setName('leaderboard')
+        .setDescription('Display the leaderboard for pp.'),
+    admin: false,
 	async execute(interaction) {
-        /*// Gives you an array
+        // Gives you an array
         const keyArray = db.balances.keyArray();
         let leaderboardArray = [];
         for (let i = 0; i < keyArray.length; i++) {
@@ -40,12 +41,10 @@ module.exports = {
         const leaderboard = new Discord.MessageEmbed()
 
         .setColor('#ffff00')
-        .setTitle(`Pinapl's Murder Royale Leaderboard`)
+        .setTitle(`Pinapl's Murder Royale <:pp:772971222119612416> Leaderboard`)
         .setDescription(embedLBArray);
         console.log(interaction.member);
         leaderboard.addField('══════════════════════════', `**${yourPlacement}**. <:pp:772971222119612416> **${yourBalance}** ${interaction.member.displayName}`);
-
-        interaction.editReply({ embeds: [leaderboard] });*/
-	interaction.editReply('This command is temporarily disabled.');
+        interaction.editReply({ embeds: [leaderboard] });
 	},
 };

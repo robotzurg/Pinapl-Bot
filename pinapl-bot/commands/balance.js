@@ -1,25 +1,27 @@
 const db = require('../db.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
-	name: 'balance',
-    description: 'Check a shop balance of you or another user.',
-	options: [
-		{
-			name: 'type',
-			type: 'STRING',
-			description: 'What balance you want to check.',
-			required: true,
-			choices: [
-				{ name: 'Pinapl Points', value: 'pp' },
-				{ name: 'Murder Money', value: 'mm' },
-			],
-		}, {
-			name: 'user',
-			type: 'USER',
-			description: 'The user that you would like to check the balance of. Defaults to yourself.',
-			required: false,
-		},
-	],
+	data: new SlashCommandBuilder()
+		.setName('balance')
+		.setDescription('Check a balance of you or another user.')
+		.addStringOption(option => 
+			option.setName('type')
+				.setDescription('What balance to check!')
+				.setRequired(true)
+                .addChoices([
+					[
+						'Pinapl Points',
+						'pp',
+					], [
+						'Murder Money',
+						'mm',
+					],
+				]))
+		.addUserOption(option => 
+			option.setName('user')
+				.setDescription('The user to check the balance of. Defaults to yourself.')
+				.setRequired(false)),
 	admin: false,
 	async execute(interaction) {
 		let taggedUser;

@@ -1,20 +1,13 @@
 const db = require('../db.js');
 const Discord = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
-	name: 'shop',
-    description: 'See whats in the shop!',
-    options: [
-        {
-            name: "pp",
-            description: "See the items in the PP shop!",
-            type: "SUB_COMMAND",
-        },
-        {
-            name: "mm",
-            description: "See the items in the MM shop!",
-            type: "SUB_COMMAND",
-        }],
+    data: new SlashCommandBuilder()
+        .setName('shop')
+        .setDescription('See whats in the shop!')
+        .addSubcommand(subcommand => subcommand.setName('pp').setDescription('PP shop'))
+        .addSubcommand(subcommand => subcommand.setName('mm').setDescription('MM shop')),
     admin: false,
 	execute(interaction) {
         const shopType = interaction.options._subcommand;

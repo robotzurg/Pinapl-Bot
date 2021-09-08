@@ -1,21 +1,18 @@
 const db = require('../db.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
-	name: 'give',
-    description: 'Give some of your pp to another user!',
-    options: [
-        {
-            name: 'user',
-            type: 'USER',
-            description: 'The user you would like to send money to.',
-            required: true,
-        }, {
-            name: 'amount_of_pp',
-            type: 'INTEGER',
-            description: 'The amount of pp to send.',
-            required: true,
-        },
-    ],
+    data: new SlashCommandBuilder()
+        .setName('give')
+        .setDescription('Give some of your pp to another user.')
+        .addUserOption(option => 
+            option.setName('user')
+                .setDescription('The user you would like to send money to.')
+                .setRequired(true))
+        .addIntegerOption(option =>
+            option.setName('amount_of_pp')
+                .setDescription('The amount of pp to send')
+                .setRequired(false)),
     admin: false,
 	async execute(interaction) {
         const taggedUser = await interaction.guild.members.fetch(interaction.options._hoistedOptions[0].value);

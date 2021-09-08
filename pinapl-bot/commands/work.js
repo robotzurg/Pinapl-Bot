@@ -1,9 +1,10 @@
 const db = require('../db.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
 
 module.exports = {
-    name: 'work',
-    description: 'Work for the day!',
-    options: [],
+    data: new SlashCommandBuilder()
+        .setName('work')
+        .setDescription('Work for the day!'),
     admin: false,
     execute(interaction) {
         if (db.workList.get('workerList').includes(parseInt(interaction.user.id))) return interaction.editReply('You feel pretty tired... You won\'t be able to work for a while.');
@@ -17,10 +18,10 @@ module.exports = {
 			db.workList.set(interaction.user.id, true, 'worked');
 			num = db.workList.get(interaction.user.id, 'streak');
 
-			if (num % 7 == 0) {
+			if (num === 7) {
 				interaction.channel.send('**You\'ve worked 7 days in a row! Here\'s your bonus. 50 <:pp:772971222119612416>!**');
 				db.balances.math(interaction.user.id, '+', 50);
-			} else if (num % 30 == 0) {
+			} else if (num === 30) {
 				interaction.channel.send('**You\'ve worked 30 days in a row!!! Here\'s your bonus, you amazing employee! 500 <:pp:772971222119612416>!**');
 				db.balances.math(interaction.user.id, '+', 500);
 				db.workList.set(interaction.user.id, 0, 'streak');
