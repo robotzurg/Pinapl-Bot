@@ -698,7 +698,7 @@ client.on('messageCreate', async message => {
 					if (message.content.includes('PINAPL CRATE')) {
 						crateAmt = Math.round(randomNumber(5, 30));
 						message.channel.send(`<@${crateUsrID}> has claimed the crate.\nYou find **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
-						db.balances.math('837709599544967180', '+', crateAmt);
+						db.balances.math(crateUsrID, '+', crateAmt);
 
 					} else if (message.content.includes('TRICKY CRATE')) {
 						let chance = weighted_random(trickyChance);
@@ -706,7 +706,7 @@ client.on('messageCreate', async message => {
 						if (chance === 'give') {
 							crateAmt = Math.round(randomNumber(20, 50));
 							message.channel.send(`<@${crateUsrID}> has claimed the crate.\nYou find **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
-							db.balances.math('837709599544967180', '+', crateAmt);
+							db.balances.math(crateUsrID, '+', crateAmt);
 						} else if (chance === 'take') {
 							crateAmt = Math.round(randomNumber(1, 50));
 							message.channel.send(`<@${crateUsrID}> has claimed the crate.\n A hand comes out of the crate, reaches into your pocket, and steals **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
@@ -716,7 +716,7 @@ client.on('messageCreate', async message => {
 					} else if (message.content.includes('KING CRATE')) {
 						crateAmt = Math.round(randomNumber(50, 500));
 						message.channel.send(`<@${crateUsrID}> has claimed the crate.\nYou find **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
-						db.balances.math('837709599544967180', '+', crateAmt);
+						db.balances.math(crateUsrID, '+', crateAmt);
 
 					}
 
