@@ -16,6 +16,7 @@ module.exports = {
 				.setDescription('Number of pp to bet!')
 				.setRequired(true)),
 	admin: false,
+    cooldown: 900,
 	execute(interaction) {
         let bet_amt = parseInt(interaction.options._hoistedOptions[0].value);
         let chance_modifier = 0;
@@ -63,7 +64,8 @@ module.exports = {
         .setTitle(`<:botrng:831955715803316339> Pinapl's Casino <:botrng:831955715803316339>`)
         .setDescription(`You are betting **${bet_amt}**<:pp:772971222119612416>.`)
         .addField(`Your roll:`, `${rand_amt_plr}`)
-        .addField(`The dealers roll:`, `${rand_amt_bot}`);
+        .addField(`The dealers roll:`, `${rand_amt_bot}`)
+        .setFooter(`You can bet again in 15 minutes.`);
 
         if (rand_amt_bot > rand_amt_plr) {
             new_amt = db.balances.get(interaction.user.id) - bet_amt;
