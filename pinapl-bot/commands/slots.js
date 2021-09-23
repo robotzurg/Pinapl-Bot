@@ -16,10 +16,8 @@ module.exports = {
 				.setDescription('Number of pp to bet!')
 				.setRequired(true)),
 	admin: false,
+    cooldown: 900,
 	execute(interaction) {
-        if (interaction.user.id != '122568101995872256') {
-            return interaction.editReply('This command is under construction.');
-        }
         let bet_amt = parseInt(interaction.options._hoistedOptions[0].value);
         let slot_options = ['<:botno:773619578336837644>', '<:rainbowwoke:850098513718018069>', '<:botslime:771428142085701653>', '<:botgrin:788062334425497601>', 
         '<:botjeff:831572962833727558>', '<:botcatpink:790994230029844481>', '<:botwoke:774361209503613009>'];
@@ -43,8 +41,8 @@ module.exports = {
         '------------------------------------------------------\n' +
         `You bet **${bet_amt}** <:pp:772971222119612416>`;
 
-        if (bet_amt > 1000) {
-            return interaction.editReply('The Pinapl Casino rejects your money. Your money is returned.\nThe limit is 1000 <:pp:772971222119612416>.');
+        if (bet_amt > 250) {
+            bet_amt = 250
         }
 
         if (bet_amt > db.balances.get(interaction.user.id)) {
@@ -108,8 +106,8 @@ module.exports = {
             db.balances.math(interaction.user.id, '+', winnings);
         } else {
             bonus_display = 'Nothing!';
-            final_message = `Nothing really comes out of this. You get your money back.`;
-            db.balances.math(interaction.user.id, '+', bet_amt);
+            final_message = `Nothing really comes out of this. You get some of your money back, but some of it is sucked into the void....`;
+            db.balances.math(interaction.user.id, '+', bet_amt / 2);
         }
 
         const betEmbed = new Discord.MessageEmbed()
@@ -119,7 +117,7 @@ module.exports = {
         .setDescription(slot_display)
         .addField(`The bot machine returns`, `| ${slot1} | ${slot2} | ${slot3} |`)
         .addField(`Bonuses:`, `${bonus_display}\n${final_message}`)
-        .setFooter(`You can bet again in 15 minutes.`);
+        .setFooter(`You can bet again in 15 minutes. The max you can bet is 250pp.`);
 
         interaction.editReply({ embeds: [betEmbed] });
 	},

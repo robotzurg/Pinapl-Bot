@@ -31,7 +31,7 @@ const clientId = '791055052067962891';
 const guildId = '771373425734320159';
 
 let crateUsrID;
-let intervalTime = randomNumber(1.08e+8, 1.8e+8);
+let intervalTime = randomNumber(5.4e+7, 1.08e+8);
 client.cooldowns = new Discord.Collection();
 console.log(intervalTime);
 
@@ -76,7 +76,7 @@ const myFunction = function() {
 		case 'king': channel.send('<:botking:773959160110121031> KING CRATE <:botking:773959160110121031>\n*React first to claim!*'); break;
 	}
 	
-	intervalTime = randomNumber(1.08e+8, 1.8e+8);
+	intervalTime = randomNumber(5.4e+7, 1.08e+8);
 	setTimeout(myFunction, intervalTime);
 };
 setTimeout(myFunction, intervalTime);
