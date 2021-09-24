@@ -71,12 +71,21 @@ module.exports = {
 
         } else if ([slot1, slot2, slot3].filter(slot => slot === '<:botno:773619578336837644>').length === 3) {
             bonus_display = '<:botno:773619578336837644> <:botno:773619578336837644> <:botno:773619578336837644> (xAdios Money)';
-            final_message = `YOU HAVE ANGERED THE CASINO GODS WITH YOUR 3 ❌s, YOUR MONEY IS NOW FORFEIT.\nBummer! You lose all of your money!`;
+            if (!db.profile.get(interaction.user.id, 'items').includes('clover')) {
+                final_message = `YOU HAVE ANGERED THE CASINO GODS WITH YOUR 3 ❌s, YOUR MONEY IS NOW FORFEIT.\nBummer! You lose all of your money!`;
 
-            db.profile.math(interaction.user.id, '+', db.balances.get(interaction.user.id), 'slots.pp_lost');
-            db.profile.math(interaction.user.id, '+', db.balances.get(interaction.user.id), 'casino.pp_lost');
+                db.profile.math(interaction.user.id, '+', db.balances.get(interaction.user.id), 'slots.pp_lost');
+                db.profile.math(interaction.user.id, '+', db.balances.get(interaction.user.id), 'casino.pp_lost');
+                db.balances.set(interaction.user.id, 0);
+            } else {
+                final_message = `YOU HAVE ANGERED THE CASINO GODS WITH YOUR 3 ❌s, YOUR MONEY IS NOW FORFEIT.\nYou quickly brandish your clover, and negate the forfeit money!\nYou only lose what you bet!`;
+
+                db.profile.math(interaction.user.id, '+', bet_amt, 'slots.pp_lost');
+                db.profile.math(interaction.user.id, '+', bet_amt, 'casino.pp_lost');
+            }
+
             db.profile.math(interaction.user.id, '+', 1, 'slots.adios');
-            db.balances.set(interaction.user.id, 0);
+
 
         } else if (slot1 === '<:rainbowwoke:850098513718018069>' && slot2 === '<:rainbowwoke:850098513718018069>' && slot3 === '<:rainbowwoke:850098513718018069>') {
             bonus_display = '<:rainbowwoke:850098513718018069> <:rainbowwoke:850098513718018069> <:rainbowwoke:850098513718018069> (x20)';

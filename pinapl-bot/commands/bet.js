@@ -44,6 +44,8 @@ module.exports = {
             chance_modifier = 1;
         }
 
+        if (db.profile.get(interaction.user.id, 'items').includes('clover')) chance_modifier = 0;
+
         let rand_amt_plr = Math.round(randomNumber(0, 50));
         let rand_amt_bot = Math.round(randomNumber(0, 50));
         console.log(`Plr: ${rand_amt_plr}`);
