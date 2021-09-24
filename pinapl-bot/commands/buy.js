@@ -31,6 +31,9 @@ module.exports = {
         }
 
         if (balance >= item_obj.cost) {
+
+            db.profile.math(interaction.user.id, '+', 1, 'casino.items_bought');
+
             balance -= item_obj.cost;
             if (shop_type === 'pp') {
                 db.balances.set(interaction.user.id, balance);
@@ -40,8 +43,7 @@ module.exports = {
             
             const purchase_channel = interaction.guild.channels.cache.get('814788744573878312');
 
-            if (item_name != 'Banana' && item_name != 'Vip' && item_name != 'Grape' && item_name != 'Crate' && 
-            item_name != 'Bone' && item_name != 'Gold Crown' && item_name != 'Ping') {
+            if (item_name != 'Banana' && item_name != 'Vip' && item_name != 'Grape' && item_name != 'Crate' && item_name != 'Gold Crown' && item_name != 'Ping') {
                 purchase_channel.send(`<@145267507844874241>, <@${interaction.user.id}> has bought the ${item_obj.emoji} **${item_name}** ${item_obj.emoji} item!`);
             } else {
                 purchase_channel.send(`<@${interaction.user.id}> has bought the ${item_obj.emoji} **${item_name}** ${item_obj.emoji} item.`);
@@ -50,8 +52,6 @@ module.exports = {
                     const bananaRole = client.guilds.cache.find(guild => guild.id === '771373425734320159').roles.cache.find(role => role.name === "🍌Banana Role");
                     interaction.guild.members.fetch(interaction.user).then(a => a.roles.add(bananaRole));
 
-                } else if (item_name === 'Bone') {
-                    add_role(interaction, interaction.user, '777964201255501855');
                 } else if (item_name === 'Gold Crown') {
                     add_role(interaction, interaction.user, '839540200908390430');
                 } else if (item_name === 'Crate') {
@@ -65,6 +65,8 @@ module.exports = {
                 } else if (item_name === 'Ping') {
                     let channel_to_send = interaction.guild.channels.cache.get('771373426664275980');
                     channel_to_send.send(`Get pinged loser <@145267507844874241>\n*from ${interaction.member.displayName}, who purchased the Ping item.*`);
+                } else if (item_name === '4-Leaf Clover') {
+                    db.profile.push(interaction.user.id, 'clover', `items`);
                 }
             }
             if (item_name != 'Crate') {

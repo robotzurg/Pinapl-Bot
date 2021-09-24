@@ -6,4 +6,5 @@ module.exports = {
   mmshop: new Enmap({ name: "mmshop" }),
   balances: new Enmap({ name: "balances" }),
   mmbalances: new Enmap({ name: "mmbalances" }),
+  profile: new Enmap({ name: "profile" }),
 };
