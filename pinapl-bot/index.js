@@ -109,6 +109,12 @@ client.on('interactionCreate', async interaction => {
 	await interaction.deferReply();
 
     const command = await client.commands.get(interaction.commandName);
+    
+    if (command.admin === true) {
+		if (interaction.user.id != "122568101995872256" && interaction.user.id != "145267507844874241") {
+			return interaction.editReply("This command isn't for you.")
+		}
+	}
 
 	if (!client.cooldowns.has(interaction.commandName)) {
         client.cooldowns.set(interaction.commandName, new Discord.Collection());

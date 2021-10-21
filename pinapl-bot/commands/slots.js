@@ -37,7 +37,7 @@ module.exports = {
         '<:rainbowwoke:850098513718018069> <:rainbowwoke:850098513718018069> x4 (any pair of 2)\n' +
         '<:rainbowwoke:850098513718018069> x2\n' + 
         '<:botno:773619578336837644> x0\n' +
-        '<:botno:773619578336837644> <:botno:773619578336837644> <:botno:773619578336837644> xAdios Money\n' +
+        '<:botno:773619578336837644> <:botno:773619578336837644> <:botno:773619578336837644> x-5\n' +
         '------------------------------------------------------\n' +
         `You bet **${bet_amt}** <:pp:772971222119612416>`;
 
@@ -70,13 +70,14 @@ module.exports = {
             db.profile.math(interaction.user.id, '+', 1, 'slots.negative');
 
         } else if ([slot1, slot2, slot3].filter(slot => slot === '<:botno:773619578336837644>').length === 3) {
-            bonus_display = '<:botno:773619578336837644> <:botno:773619578336837644> <:botno:773619578336837644> (xAdios Money)';
+            bonus_display = '<:botno:773619578336837644> <:botno:773619578336837644> <:botno:773619578336837644> (x-5)';
             if (!db.profile.get(interaction.user.id, 'items').includes('clover')) {
-                final_message = `YOU HAVE ANGERED THE CASINO GODS WITH YOUR 3 ❌s, YOUR MONEY IS NOW FORFEIT.\nBummer! You lose all of your money!`;
+                final_message = `YOU HAVE ANGERED THE CASINO GODS WITH YOUR 3 ❌s, YOUR MONEY IS NOW FORFEIT.\nBummer! You lose 5x what you put in!`;
+                winnings = bet_amt * 5
 
-                db.profile.math(interaction.user.id, '+', db.balances.get(interaction.user.id), 'slots.pp_lost');
-                db.profile.math(interaction.user.id, '+', db.balances.get(interaction.user.id), 'casino.pp_lost');
-                db.balances.set(interaction.user.id, 0);
+                db.profile.math(interaction.user.id, '+', winnings, 'slots.pp_lost');
+                db.profile.math(interaction.user.id, '+', winnings, 'casino.pp_lost');
+                db.balances.math(interaction.user.id, '-', winnings);
             } else {
                 final_message = `YOU HAVE ANGERED THE CASINO GODS WITH YOUR 3 ❌s, YOUR MONEY IS NOW FORFEIT.\nYou quickly brandish your clover, and negate the forfeit money!\nYou only lose what you bet!`;
 
@@ -170,7 +171,7 @@ module.exports = {
         } else {
             bonus_display = 'Nothing!';
             final_message = `Nothing really comes out of this. You get some of your money back, but some of it is sucked into the void....`;
-            db.balances.math(interaction.user.id, '+', Math.round(bet_amt / 4));
+            db.balances.math(interaction.user.id, '+', bet_amt - Math.round(bet_amt / 4));
 
             db.profile.math(interaction.user.id, '+', Math.round(bet_amt / 4), 'slots.pp_lost');
             db.profile.math(interaction.user.id, '+', Math.round(bet_amt / 4), 'casino.pp_lost');

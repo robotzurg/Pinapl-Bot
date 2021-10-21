@@ -12,12 +12,12 @@ module.exports = {
         .addIntegerOption(option =>
             option.setName('amount_of_pp')
                 .setDescription('The amount of pp to send')
-                .setRequired(false)),
+                .setRequired(true)),
     admin: false,
 	async execute(interaction) {
         const taggedUser = await interaction.guild.members.fetch(interaction.options._hoistedOptions[0].value);
         if (taggedUser === interaction.user || interaction.options._hoistedOptions[0].value === interaction.user.id) return interaction.editReply('You can\'t send <:pp:772971222119612416> to yourself.');
-        const send_amt = interaction.options._hoistedOptions[1].value;
+        const send_amt = interaction.options.getInteger('amount_of_pp')
 
         let authorBal = db.balances.get(interaction.user.id);
         if (authorBal < send_amt) return interaction.editReply(`You don't have this much <:pp:772971222119612416>!\nCurrent balance: ${authorBal}`);
