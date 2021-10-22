@@ -73,7 +73,7 @@ module.exports = {
             bonus_display = '<:botno:773619578336837644> <:botno:773619578336837644> <:botno:773619578336837644> (x-5)';
             if (!db.profile.get(interaction.user.id, 'items').includes('clover')) {
                 final_message = `YOU HAVE ANGERED THE CASINO GODS WITH YOUR 3 ❌s, YOUR MONEY IS NOW FORFEIT.\nBummer! You lose 5x what you put in!`;
-                winnings = bet_amt * 5
+                winnings = bet_amt * 5;
 
                 db.profile.math(interaction.user.id, '+', winnings, 'slots.pp_lost');
                 db.profile.math(interaction.user.id, '+', winnings, 'casino.pp_lost');

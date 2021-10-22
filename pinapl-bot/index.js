@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // I love you Pinapl Bot
 
 const Discord = require('discord.js');
@@ -5,8 +6,8 @@ const fs = require('fs');
 const { token } = require('./config.json');
 const db = require("./db.js");
 const cron = require("node-cron");
-const { add_role, remove_role, weighted_random, updateGameStatus, updateSponsorList, updateUserStatus } = require('./func');
-const { crateChance, trickyChance, bloodbathEvents, miscEvents, attackEvents, injuryEvents, itemEvents, nightEvents, cornTypeChoices, dayTypeChoices, nightTypeChoices, final3TypeChoices } = require('./arrays.json');
+const { add_role, remove_role, weighted_random, updateGameStatus, updateSponsorList, updateUserStatus, capitalize } = require('./func');
+const { crateChance, trickyChance, bloodbathEvents, miscEvents, attackEvents, injuryEvents, itemEvents, nightEvents, cornTypeChoices, dayTypeChoices, nightTypeChoices, final3TypeChoices, houseChance, botChance } = require('./arrays.json');
 
 // Set up random number function
 function randomNumber(min, max) {  
@@ -31,7 +32,7 @@ const clientId = '791055052067962891';
 const guildId = '771373425734320159';
 
 let crateUsrID;
-let intervalTime = randomNumber(5.4e+7, 1.08e+8);
+let intervalTime = randomNumber(1.2e+6, 3e+6);
 client.cooldowns = new Discord.Collection();
 console.log(intervalTime);
 
@@ -67,16 +68,91 @@ const rest = new REST({ version: '9' }).setToken(token);
 })();
 	
 const myFunction = function() {
-	const channel = client.channels.cache.get('889637708195070013');
-	const cratePick = weighted_random(crateChance);
+	let channel_list = ["771373426664275980", "889637708195070013", "788487617934786620"];
+	const channel = client.channels.cache.get(channel_list[Math.floor(Math.random() * channel_list.length)]);
 
-	switch(cratePick) {
+	// Setup buttons
+	const row = new Discord.MessageActionRow()
+	.addComponents(
+		new Discord.MessageButton()
+			.setCustomId('green')
+			.setLabel('')
+			.setStyle('SUCCESS')
+			.setEmoji('<:Candy3:900914658456793148>'),
+		new Discord.MessageButton()
+			.setCustomId('blue')
+			.setLabel('')
+			.setStyle('PRIMARY')
+			.setEmoji('<:Candy2:900914658070888480>'),
+		new Discord.MessageButton()
+			.setCustomId('red')
+			.setLabel('')
+			.setStyle('DANGER')
+			.setEmoji('<:Candy1:900914658121228398>'),
+	);
+
+	let botChoice = weighted_random(botChance);
+	let houseChoice = weighted_random(houseChance);
+	let botName = capitalize(botChoice.split(':')[1]);
+	let msgID = 0;
+
+	let halloweenEmbed = new Discord.MessageEmbed()
+	.setColor('#ffff00')
+	.setTitle('<:botspook:788145017814122497> TRICK OR TREAT <:botspook:788145017814122497>')
+	.setDescription(`You walk up to the house of **${botName}**!\nClick on one of the treats to take your prize! But beware of tricks... :)`);
+
+	channel.send({ content: `${botChoice}${houseChoice}`, embeds: [halloweenEmbed], components: [row] }).then(msg => msgID = msg.id);
+	let count = 0;
+	let blacklisted_users = [];	
+
+	const filter = i => !blacklisted_users.includes(i.user.id);
+	const collector = channel.createMessageComponentCollector({ filter, time: 1.2e+6, max: 3 });
+
+	collector.on('collect', async i => {
+		await i.deferUpdate();
+		count += 1;
+		let result_list = ["trick", "treat"];
+		let result = result_list[Math.floor(Math.random() * result_list.length)];
+		//blacklisted_users.push(i.user.id);
+		let buttons = row.components;
+
+		if (buttons.length != 1) {
+			for (let ind = 0; ind < buttons.length; ind++) {
+				let button_id = buttons[ind].customId;
+				if (i.customId === button_id) {
+					buttons = buttons.filter(item => item !== buttons[ind]);
+					row.components = buttons;
+					i.editReply({ content: `${botChoice}${houseChoice}`, embeds: [halloweenEmbed], components: [row] });
+				}
+			}
+			await i.editReply({ content: `${botChoice}${houseChoice}\n${count} candy taken.`, embeds: [halloweenEmbed], components: [row] });
+		} else {
+			await i.editReply({ content: 'No more candy :(', embeds: [], components: [] });
+			blacklisted_users = [];
+		}
+
+		if (result === 'trick') {
+			await i.followUp({ content: `You've been utterly tricked, bamboozled, and maybe even scammed.\nYou lose a treat, unless you don't have any!`, ephemeral: true });
+			db.profile.math(i.user.id, '-', 1, 'treats');
+		} else {
+			await i.followUp({ content: `You've gained a wonderful treat to add to your halloween basket collection.`, ephemeral: true });
+			db.profile.math(i.user.id, '+', 1, 'treats');
+		}
+		
+	});
+
+	collector.on('end', async i => {
+		channel.messages.fetch(msgID).then(msg => msg.edit({ content: 'No more candy :(', embeds: [], components: [] }));
+	});
+	// const cratePick = weighted_random(crateChance);
+
+	/*switch(cratePick) {
 		case 'pinapl': channel.send('<:botglad:773273503645696060> PINAPL CRATE <:botglad:773273503645696060>\n*React first to claim!*'); break;
 		case 'tricky': channel.send('<:botcat:776126782805377034> TRICKY CRATE <:botcat:776126782805377034>\n*React first to claim!*'); break;
 		case 'king': channel.send('<:botking:773959160110121031> KING CRATE <:botking:773959160110121031>\n*React first to claim!*'); break;
-	}
+	}*/
 	
-	intervalTime = randomNumber(5.4e+7, 1.08e+8);
+	intervalTime = randomNumber(1.2e+6, 3e+6);
 	setTimeout(myFunction, intervalTime);
 };
 setTimeout(myFunction, intervalTime);
@@ -112,7 +188,7 @@ client.on('interactionCreate', async interaction => {
     
     if (command.admin === true) {
 		if (interaction.user.id != "122568101995872256" && interaction.user.id != "145267507844874241") {
-			return interaction.editReply("This command isn't for you.")
+			return interaction.editReply("This command isn't for you.");
 		}
 	}
 

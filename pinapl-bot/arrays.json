@@ -20,6 +20,25 @@
         { "item": "<:botwoke:774361209503613009>", "weight": 12 }
 	],
 
+	"botChance": [
+		{ "item": "<:bothidden:771499065941688365>", "weight": 12.5 },
+        { "item": "<:botreaper:801186889016148008>", "weight": 12.5 },
+		{ "item": "<:botstabbed:809824046702395412>", "weight":  12.5 },
+        { "item": "<:botspook:788145017814122497>", "weight": 12.5 },
+		{ "item": "<:botjeff:831572962833727558>", "weight": 12.5 },
+        { "item": "<:botwah:780476482451275796>", "weight": 12.5 },
+        { "item": "<:pinapl:771375082966220830>", "weight": 12.5 },
+        { "item": "<:dougdimmabot:780478586242465832>", "weight": 12.5 }
+	],
+
+	"houseChance": [
+		{ "item": "🛖", "weight": 20 },
+        { "item": "🏚️", "weight": 20 },
+		{ "item": "🏠", "weight": 20 },
+        { "item": "🏘️", "weight": 20 },
+        { "item": "🏡", "weight": 20 }
+	],
+
 	"shopItemsPP": [
 		"Banana",
 		"Fortune",
