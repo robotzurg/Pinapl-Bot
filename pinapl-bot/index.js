@@ -7,7 +7,7 @@ const { token } = require('./config.json');
 const db = require("./db.js");
 const cron = require("node-cron");
 const { add_role, remove_role, weighted_random, updateGameStatus, updateSponsorList, updateUserStatus, capitalize } = require('./func');
-const { crateChance, trickyChance, bloodbathEvents, miscEvents, attackEvents, injuryEvents, itemEvents, nightEvents, cornTypeChoices, dayTypeChoices, nightTypeChoices, final3TypeChoices, houseChance, botChance } = require('./arrays.json');
+const { crateChance, trickyChance, treatChance, bloodbathEvents, miscEvents, attackEvents, injuryEvents, itemEvents, nightEvents, cornTypeChoices, dayTypeChoices, nightTypeChoices, final3TypeChoices, houseChance, botChance } = require('./arrays.json');
 
 // Set up random number function
 function randomNumber(min, max) {  
@@ -32,7 +32,7 @@ const clientId = '791055052067962891';
 const guildId = '771373425734320159';
 
 let crateUsrID;
-let intervalTime = randomNumber(1.2e+6, 3e+6);
+let intervalTime = randomNumber(1.8e+6, 3.6e+6);
 client.cooldowns = new Discord.Collection();
 console.log(intervalTime);
 
@@ -106,14 +106,13 @@ const myFunction = function() {
 	let blacklisted_users = [];	
 
 	const filter = i => !blacklisted_users.includes(i.user.id);
-	const collector = channel.createMessageComponentCollector({ filter, time: 1.2e+6, max: 3 });
+	const collector = channel.createMessageComponentCollector({ filter, time: 3.6e+6, max: 3 });
 
 	collector.on('collect', async i => {
 		await i.deferUpdate();
 		count += 1;
-		let result_list = ["trick", "treat"];
-		let result = result_list[Math.floor(Math.random() * result_list.length)];
-		//blacklisted_users.push(i.user.id);
+		let result = weighted_random(treatChance);
+		blacklisted_users.push(i.user.id);
 		let buttons = row.components;
 
 		if (buttons.length != 1) {
@@ -125,7 +124,8 @@ const myFunction = function() {
 					i.editReply({ content: `${botChoice}${houseChoice}`, embeds: [halloweenEmbed], components: [row] });
 				}
 			}
-			await i.editReply({ content: `${botChoice}${houseChoice}\n${count} candy taken.`, embeds: [halloweenEmbed], components: [row] });
+			halloweenEmbed.setDescription(`You walk up to the house of **${botName}**!\nClick on one of the treats to take your prize! But beware of tricks... :)\n**${count} candy taken.**`);
+			await i.editReply({ content: `${botChoice}${houseChoice}`, embeds: [halloweenEmbed], components: [row] });
 		} else {
 			await i.editReply({ content: 'No more candy :(', embeds: [], components: [] });
 			blacklisted_users = [];
@@ -134,15 +134,22 @@ const myFunction = function() {
 		if (result === 'trick') {
 			await i.followUp({ content: `You've been utterly tricked, bamboozled, and maybe even scammed.\nYou lose a treat, unless you don't have any!`, ephemeral: true });
 			db.profile.math(i.user.id, '-', 1, 'treats');
+			
 		} else {
-			await i.followUp({ content: `You've gained a wonderful treat to add to your halloween basket collection.`, ephemeral: true });
+			let randPick = randomNumber(1, 2)
+			if (randPick === 1) { 
+				await i.followUp({ content: `You've gained a wonderful treat to add to your halloween basket collection.`, ephemeral: true });
+			} else if (randPick === 2) {
+				await i.followUp({ content: `You've gained a wonderful treat to add to your halloween basket collection.\nYou find **25 <:pp:772971222119612416>** inside your candy!`, ephemeral: true });
+				db.balances.math(i.user.id, '+', 25);
+			}
 			db.profile.math(i.user.id, '+', 1, 'treats');
 		}
 		
 	});
 
 	collector.on('end', async i => {
-		channel.messages.fetch(msgID).then(msg => msg.edit({ content: 'No more candy :(', embeds: [], components: [] }));
+		channel.messages.fetch(msgID).then(msg => msg.delete());
 	});
 	// const cratePick = weighted_random(crateChance);
 
@@ -152,7 +159,7 @@ const myFunction = function() {
 		case 'king': channel.send('<:botking:773959160110121031> KING CRATE <:botking:773959160110121031>\n*React first to claim!*'); break;
 	}*/
 	
-	intervalTime = randomNumber(1.2e+6, 3e+6);
+	intervalTime = randomNumber(1.8e+6, 3.6e+6);
 	setTimeout(myFunction, intervalTime);
 };
 setTimeout(myFunction, intervalTime);

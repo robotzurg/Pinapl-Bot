@@ -4,6 +4,11 @@
 		{ "item": "tricky", "weight": 25 },
 		{ "item": "king", "weight": 5 }
 	],
+	
+	"treatChance": [
+		{ "item": "trick", "weight": 20 },
+		{ "item": "treat", "weight": 80 }
+	],
 
     "trickyChance": [
         { "item": "give", "weight": 50 },

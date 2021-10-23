@@ -1,37 +1,8 @@
 {
-  "name": "pinapl-bot",
-  "version": "1.0.0",
-  "description": "Pinapl bot",
-  "main": "index.js",
-  "scripts": {
-    "postinstall": "opencollective-postinstall || exit 0"
-  },
-  "author": "Jeff Turpin",
-  "license": "ISC",
   "dependencies": {
-    "@discordjs/builders": "^0.6.0",
-    "@discordjs/rest": "^0.1.0-canary.0",
-    "better-sqlite-pool": "^0.3.1",
-    "better-sqlite3": "^7.4.3",
-    "bindings": "^1.5.0",
-    "chance": "^1.1.7",
-    "config.json": "0.0.4",
-    "cron": "^1.8.2",
-    "discord-api-types": "^0.22.0",
-    "discord.js": "^13.1.0",
-    "enmap": "^5.8.4",
-    "eslint": "^7.15.0",
-    "node-cron": "^2.0.3",
-    "node-gyp": "^7.1.2",
-    "node.js": "0.0.1-security",
-    "nvm": "0.0.4",
-    "opencollective-postinstall": "^2.0.3",
-    "sequelize": "^6.3.5",
-    "sqlite3": "^5.0.0",
-    "trello": "^0.10.0",
-    "trello-node-api": "0.0.9"
-  },
-  "devDependencies": {
-    "babel-eslint": "^10.1.0"
+    "@discordjs/rest": "*",
+    "discord.js": "^13.2.0",
+    "enmap": "^5.8.7",
+    "node-cron": "^3.0.0"
   }
 }
