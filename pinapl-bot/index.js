@@ -112,7 +112,7 @@ const myFunction = function() {
 		await i.deferUpdate();
 		count += 1;
 		let result = weighted_random(treatChance);
-		blacklisted_users.push(i.user.id);
+		//blacklisted_users.push(i.user.id);
 		let buttons = row.components;
 
 		if (buttons.length != 1) {
@@ -127,20 +127,19 @@ const myFunction = function() {
 			halloweenEmbed.setDescription(`You walk up to the house of **${botName}**!\nClick on one of the treats to take your prize! But beware of tricks... :)\n**${count} candy taken.**`);
 			await i.editReply({ content: `${botChoice}${houseChoice}`, embeds: [halloweenEmbed], components: [row] });
 		} else {
-			await i.editReply({ content: 'No more candy :(', embeds: [], components: [] });
 			blacklisted_users = [];
 		}
 
 		if (result === 'trick') {
-			await i.channel.send({ content: `You've been utterly tricked, bamboozled, and maybe even scammed.\nYou lose a treat, unless you don't have any!`, ephemeral: true });
+			await i.followUp({ content: `You've been utterly tricked, bamboozled, and maybe even scammed.\nYou lose a treat, unless you don't have any!`, ephemeral: true });
 			db.profile.math(i.user.id, '-', 1, 'treats');
 			
 		} else {
-			let randPick = Math.round(randomNumber(1, 2))
+			let randPick = Math.round(randomNumber(1, 2));
 			if (randPick === 1) { 
-				await i.channel.send({ content: `You've gained a wonderful treat to add to your halloween basket collection.`, ephemeral: true });
+				await i.followUp({ content: `You've gained a wonderful treat to add to your halloween basket collection.`, ephemeral: true });
 			} else if (randPick === 2) {
-				await i.channel.send({ content: `You've gained a wonderful treat to add to your halloween basket collection.\nYou find **25 <:pp:772971222119612416>** inside your candy!`, ephemeral: true });
+				await i.followUp({ content: `You've gained a wonderful treat to add to your halloween basket collection.\nYou find **25 <:pp:772971222119612416>** inside your candy!`, ephemeral: true });
 				db.balances.math(i.user.id, '+', 25);
 			}
 			db.profile.math(i.user.id, '+', 1, 'treats');
@@ -149,21 +148,7 @@ const myFunction = function() {
 	});
 
 	collector.on('end', async i => {
-		channel.messages.fetch(msgID).then(msg => msg.delete());
-		if (result === 'trick') {
-						await i.channel.send({ content: `You've been utterly tricked, bamboozled, and maybe even scammed.\nYou lose a treat, unless you don't have any!`, ephemeral: true });
-									db.profile.math(i.user.id, '-', 1, 'treats');
-												
-													} else {
-																	let randPick = Math.round(randomNumber(1, 2))
-																				if (randPick === 1) { 
-																									await i.channel.send({ content: `You've gained a wonderful treat to add to your halloween basket collection.`, ephemeral: true });
-																											} else if (randPick === 2) {
-																																await i.channel.send({ content: `You've gained a wonderful treat to add to your halloween basket collection.\nYou find **25 <:pp:772971222119612416>** inside your candy!`, ephemeral: true });
-																																				db.balances.math(i.user.id, '+', 25);
-																																						}
-																																									db.profile.math(i.user.id, '+', 1, 'treats');
-																																										
+		channel.messages.fetch(msgID).then(msg => msg.delete());																									
 	});
 	// const cratePick = weighted_random(crateChance);
 
