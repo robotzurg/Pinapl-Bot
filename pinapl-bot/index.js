@@ -32,7 +32,7 @@ const clientId = '791055052067962891';
 const guildId = '771373425734320159';
 
 let crateUsrID;
-let intervalTime = randomNumber(3.6e+6, 5.4e+6);
+let intervalTime = randomNumber(2.88e+7, 4.32e+7);
 client.cooldowns = new Discord.Collection();
 console.log(intervalTime);
 
@@ -68,8 +68,7 @@ const rest = new REST({ version: '9' }).setToken(token);
 })();
 	
 const myFunction = function() {
-	let channel_list = ["771373426664275980", "889637708195070013", "788487617934786620"];
-	const channel = client.channels.cache.get(channel_list[Math.floor(Math.random() * channel_list.length)]);
+	const channel = '889637708195070013';
 
 	// Setup buttons
 	const row = new Discord.MessageActionRow()
@@ -91,74 +90,15 @@ const myFunction = function() {
 			.setEmoji('<:Candy1:900914658121228398>'),
 	);
 
-	let botChoice = weighted_random(botChance);
-	let houseChoice = weighted_random(houseChance);
-	let botName = capitalize(botChoice.split(':')[1]);
-	let msgID = 0;
+	const cratePick = weighted_random(crateChance);
 
-	let halloweenEmbed = new Discord.MessageEmbed()
-	.setColor('#ffff00')
-	.setTitle('<:botspook:788145017814122497> TRICK OR TREAT <:botspook:788145017814122497>')
-	.setDescription(`You walk up to the house of **${botName}**!\nClick on one of the treats to take your prize! But beware of tricks... :)`);
-
-	channel.send({ content: `${botChoice}${houseChoice}`, embeds: [halloweenEmbed], components: [row] }).then(msg => msgID = msg.id);
-	let count = 0;
-	let blacklisted_users = [];	
-
-	const filter = i => !blacklisted_users.includes(i.user.id);
-	const collector = channel.createMessageComponentCollector({ filter, time: 3.6e+6, max: 3 });
-
-	collector.on('collect', async i => {
-		await i.deferUpdate();
-		count += 1;
-		let result = weighted_random(treatChance);
-		//blacklisted_users.push(i.user.id);
-		let buttons = row.components;
-
-		if (buttons.length != 1) {
-			for (let ind = 0; ind < buttons.length; ind++) {
-				let button_id = buttons[ind].customId;
-				if (i.customId === button_id) {
-					buttons = buttons.filter(item => item !== buttons[ind]);
-					row.components = buttons;
-					i.editReply({ content: `${botChoice}${houseChoice}`, embeds: [halloweenEmbed], components: [row] });
-				}
-			}
-			halloweenEmbed.setDescription(`You walk up to the house of **${botName}**!\nClick on one of the treats to take your prize! But beware of tricks... :)\n**${count} candy taken.**`);
-			await i.editReply({ content: `${botChoice}${houseChoice}`, embeds: [halloweenEmbed], components: [row] });
-		} else {
-			blacklisted_users = [];
-		}
-
-		if (result === 'trick') {
-			await i.followUp({ content: `You've been utterly tricked, bamboozled, and maybe even scammed.\nYou lose a treat, unless you don't have any!`, ephemeral: true });
-			db.profile.math(i.user.id, '-', 1, 'treats');
-			
-		} else {
-			let randPick = Math.round(randomNumber(1, 2));
-			if (randPick === 1) { 
-				await i.followUp({ content: `You've gained a wonderful treat to add to your halloween basket collection.`, ephemeral: true });
-			} else if (randPick === 2) {
-				await i.followUp({ content: `You've gained a wonderful treat to add to your halloween basket collection.\nYou find **25 <:pp:772971222119612416>** inside your candy!`, ephemeral: true });
-				db.balances.math(i.user.id, '+', 25);
-			}
-			db.profile.math(i.user.id, '+', 1, 'treats');
-		}
-		
-	});
-
-	collector.on('end', async i => {
-		channel.messages.fetch(msgID).then(msg => msg.delete());																									
-	});
-	// const cratePick = weighted_random(crateChance);
-
-	/*switch(cratePick) {
+	switch(cratePick) {
 		case 'pinapl': channel.send('<:botglad:773273503645696060> PINAPL CRATE <:botglad:773273503645696060>\n*React first to claim!*'); break;
 		case 'tricky': channel.send('<:botcat:776126782805377034> TRICKY CRATE <:botcat:776126782805377034>\n*React first to claim!*'); break;
 		case 'king': channel.send('<:botking:773959160110121031> KING CRATE <:botking:773959160110121031>\n*React first to claim!*'); break;
-	}*/
+	}
 	
-	intervalTime = randomNumber(3.6e+6, 5.4e+6);
+	intervalTime = randomNumber(2.88e+7, 4.32e+7);
 	setTimeout(myFunction, intervalTime);
 };
 setTimeout(myFunction, intervalTime);
