@@ -74,7 +74,7 @@ module.exports = {
         if (rand_amt_bot > rand_amt_plr) {
             new_amt = db.balances.get(interaction.user.id) - bet_amt;
             db.balances.set(interaction.user.id, new_amt);
-            betEmbed.addField(`<:botdead:773283710744789013> You have lost the bet. <:botdead:773283710744789013>`, `**${bet_amt}**<:pp:772971222119612416> has been taken from your balance.\n\`Your new balance is ${db.balances.get(interaction.user.id)}\`<:pp:772971222119612416>`);
+            betEmbed.addField(`:skull_crossbones: You have lost the bet. :skull_crossbones:`, `**${bet_amt}**<:pp:772971222119612416> has been taken from your balance.\n\`Your new balance is ${db.balances.get(interaction.user.id)}\`<:pp:772971222119612416>`);
             db.profile.math(interaction.user.id, '+', 1, 'betting.games_lost');
             db.profile.math(interaction.user.id, '+', bet_amt, 'betting.pp_lost');
             db.profile.math(interaction.user.id, '+', bet_amt, 'casino.pp_lost');

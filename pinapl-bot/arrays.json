@@ -18,11 +18,11 @@
 	"slotChance": [
 		{ "item": "<:botno:773619578336837644>", "weight": 8 },
         { "item": "<:rainbowwoke:850098513718018069>", "weight": 8 },
-		{ "item": "<:botslime:771428142085701653>", "weight":  19 },
+		{ "item": "<:botslime:916344571053637632>", "weight":  19 },
         { "item": "<:botgrin:788062334425497601>", "weight": 19 },
 		{ "item": "<:botjeff:831572962833727558>", "weight": 17 },
         { "item": "<:botcatpink:790994230029844481>", "weight": 17 },
-        { "item": "<:botwoke:774361209503613009>", "weight": 12 }
+        { "item": "<:botwoke:916344676066398238>", "weight": 12 }
 	],
 
 	"botChance": [

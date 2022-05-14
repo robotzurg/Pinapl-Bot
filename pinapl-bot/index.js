@@ -68,7 +68,7 @@ const rest = new REST({ version: '9' }).setToken(token);
 })();
 	
 const myFunction = function() {
-	const channel = '889637708195070013';
+	const channel = client.channels.cache.get('889637708195070013');
 
 	// Setup buttons
 	const row = new Discord.MessageActionRow()
@@ -93,9 +93,9 @@ const myFunction = function() {
 	const cratePick = weighted_random(crateChance);
 
 	switch(cratePick) {
-		case 'pinapl': channel.send('<:botglad:773273503645696060> PINAPL CRATE <:botglad:773273503645696060>\n*React first to claim!*'); break;
-		case 'tricky': channel.send('<:botcat:776126782805377034> TRICKY CRATE <:botcat:776126782805377034>\n*React first to claim!*'); break;
-		case 'king': channel.send('<:botking:773959160110121031> KING CRATE <:botking:773959160110121031>\n*React first to claim!*'); break;
+		case 'pinapl': channel.send('<:botglad:916344650405642292> PINAPL CRATE <:botglad:916344650405642292>\n*React first to claim!*'); break;
+		case 'tricky': channel.send('<:botcat:791088071802224710> TRICKY CRATE <:botcat:791088071802224710>\n*React first to claim!*'); break;
+		case 'king': channel.send(':crown: KING CRATE :crown:\n*React first to claim!*'); break;
 	}
 	
 	intervalTime = randomNumber(2.88e+7, 4.32e+7);

@@ -25,9 +25,9 @@ module.exports = {
         const cratePick = interaction.options.getString('crate');
 
         switch(cratePick) {
-            case 'pinapl': interaction.channel.send('<:botglad:773273503645696060> PINAPL CRATE <:botglad:773273503645696060>\n*React first to claim!*'); break;
-            case 'tricky': interaction.channel.send('<:botcat:776126782805377034> TRICKY CRATE <:botcat:776126782805377034>\n*React first to claim!*'); break;
-            case 'king': interaction.channel.send('<:botking:773959160110121031> KING CRATE <:botking:773959160110121031>\n*React first to claim!*'); break;
+            case 'pinapl': interaction.channel.send('<:botglad:916344650405642292> PINAPL CRATE <:botglad:916344650405642292>\n*React first to claim!*'); break;
+            case 'tricky': interaction.channel.send('<:botcatbox:791088071802224710> TRICKY CRATE <:botcatbox:791088071802224710>\n*React first to claim!*'); break;
+            case 'king': interaction.channel.send(':crown: KING CRATE :crown:\n*React first to claim!*'); break;
         }
 
 		interaction.deleteReply();

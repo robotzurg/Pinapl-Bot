@@ -29,11 +29,11 @@ module.exports = {
         let final_message = 'None';
 
         let slot_display = '<:rainbowwoke:850098513718018069> <:rainbowwoke:850098513718018069> <:rainbowwoke:850098513718018069> x20\n' +
-        '<:botwoke:774361209503613009> <:botwoke:774361209503613009> <:botwoke:774361209503613009> x15\n' + 
+        '<:botwoke:916344676066398238> <:botwoke:916344676066398238> <:botwoke:916344676066398238> x15\n' + 
         '<:botcatpink:790994230029844481> <:botcatpink:790994230029844481> <:botcatpink:790994230029844481> x10\n' +
         '<:botjeff:831572962833727558> <:botjeff:831572962833727558> <:botjeff:831572962833727558> x10\n' +
         '<:botgrin:788062334425497601> <:botgrin:788062334425497601> <:botgrin:788062334425497601> x5\n' +
-        '<:botslime:771428142085701653> <:botslime:771428142085701653> <:botslime:771428142085701653> x5\n' +
+        '<:botslime:916344571053637632> <:botslime:916344571053637632> <:botslime:916344571053637632> x5\n' +
         '<:rainbowwoke:850098513718018069> <:rainbowwoke:850098513718018069> x4 (any pair of 2)\n' +
         '<:rainbowwoke:850098513718018069> x2\n' + 
         '<:botno:773619578336837644> x0\n' +
@@ -98,8 +98,8 @@ module.exports = {
             db.profile.math(interaction.user.id, '+', winnings, 'casino.pp_won');
             db.profile.math(interaction.user.id, '+', 1, 'slots.jackpot');
 
-        } else if (slot1 === '<:botwoke:774361209503613009>' && slot2 === '<:botwoke:774361209503613009>' && slot3 === '<:botwoke:774361209503613009>') {
-            bonus_display = '<:botwoke:774361209503613009> <:botwoke:774361209503613009> <:botwoke:774361209503613009> (x15)';
+        } else if (slot1 === '<:botwoke:916344676066398238>' && slot2 === '<:botwoke:916344676066398238>' && slot3 === '<:botwoke:916344676066398238>') {
+            bonus_display = '<:botwoke:916344676066398238> <:botwoke:916344676066398238> <:botwoke:916344676066398238> (x15)';
             winnings = bet_amt * 15;
             final_message = `Close... but still very commendable.\nCongrats! You gain 15x what you put in and get **${winnings}** <:pp:772971222119612416>!`;
             db.balances.math(interaction.user.id, '+', winnings);
@@ -138,8 +138,8 @@ module.exports = {
             db.profile.math(interaction.user.id, '+', winnings, 'casino.pp_won');
             db.profile.math(interaction.user.id, '+', 1, 'slots.positive');
 
-        } else if (slot1 === '<:botslime:771428142085701653>' && slot2 === '<:botslime:771428142085701653>' && slot3 === '<:botslime:771428142085701653>') {
-            bonus_display = '<:botslime:771428142085701653> <:botslime:771428142085701653> <:botslime:771428142085701653> (x5)';
+        } else if (slot1 === '<:botslime:916344571053637632>' && slot2 === '<:botslime:916344571053637632>' && slot3 === '<:botslime:916344571053637632>') {
+            bonus_display = '<:botslime:916344571053637632> <:botslime:916344571053637632> <:botslime:916344571053637632> (x5)';
             winnings = bet_amt * 5;
             final_message = `A little slimey, but a wins a win!\nCongrats! You gain 5x what you put in and get **${winnings}** <:pp:772971222119612416>!`;
             db.balances.math(interaction.user.id, '+', winnings);
