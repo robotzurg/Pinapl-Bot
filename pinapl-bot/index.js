@@ -170,6 +170,44 @@ client.on('interactionCreate', async interaction => {
 //Listen for people joining
 client.on('guildMemberAdd', (guildMember) => {
 	db.balances.set(guildMember.id, 0);
+	db.mmbalances.set(guildMember.id, 0);
+	db.profile.set(guildMember.id, {
+		"betting": {
+			"games_lost": 0,
+			"games_played": 0,
+			"games_tied": 0,
+			"games_won": 0,
+			"pp_lost": 0,
+			"pp_won": 0,
+		},
+		"casino": {
+			"crates": 0,
+			"games_played": 0,
+			"items_bought": 0,
+			"pp_lost": 0,
+			"pp_won": 0,
+		},
+		"items": [],
+		"murder": {
+			"games_list": [],
+			"games_played": 0,
+			"games_won": 0,
+			"kd_ratio": 0,
+			"kill_streak": 0,
+			"kills": 0,
+		},
+		"slots": {
+			"adios": 0,
+			"games_played": 0,
+			"jackpot": 0,
+			"negative": 0,
+			"neutral": 0,
+			"positive": 0,
+			"pp_lost": 0,
+			"pp_won": 0,
+		},
+		"treats": 0,
+	});
 });
 
 client.on("messageReactionAdd", function(messageReaction, user) {
