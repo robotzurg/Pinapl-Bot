@@ -1,7 +1,7 @@
 const db = require('../db.js');
 const { add_role, weighted_random, capitalize } = require('../func.js');
 const { crateChance, shopItemsPP } = require('../arrays.json');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -11,7 +11,6 @@ module.exports = {
 			option.setName('item')
 				.setDescription('The item that you would like to purchase.')
 				.setRequired(true)),
-	admin: false,
 	execute(interaction, client) {
         const item_name = capitalize(interaction.options.getString('item'));
         let shop_type;
@@ -63,7 +62,7 @@ module.exports = {
                         db.balances.math(interaction.user.id, '+', 500);
                         purchase_channel.send(`It failed due to them already owning it.`);
                         db.profile.math(interaction.user.id, '-', 1, 'casino.items_bought');
-                        return interaction.editReply('You already own the Banana, so you can\'t get it again!');
+                        return interaction.reply('You already own the Banana, so you can\'t get it again!');
                     }
 
                 } else if (item_name === 'Gold Crown') {
@@ -74,7 +73,7 @@ module.exports = {
                         db.balances.math(interaction.user.id, '+', 10000);
                         purchase_channel.send(`It failed due to them already owning it.`);
                         db.profile.math(interaction.user.id, '-', 1, 'casino.items_bought');
-                        return interaction.editReply('You already own the Gold Crown, so you can\'t get it again!');
+                        return interaction.reply('You already own the Gold Crown, so you can\'t get it again!');
                     }
                 } else if (item_name === 'Crate') {
                     const cratePick = weighted_random(crateChance);
@@ -94,24 +93,24 @@ module.exports = {
                         db.balances.math(interaction.user.id, '+', 5000);
                         purchase_channel.send(`It failed due to them already owning it.`);
                         db.profile.math(interaction.user.id, '-', 1, 'casino.items_bought');
-                        return interaction.editReply('You already own the clover, so you can\'t get it again!');
+                        return interaction.reply('You already own the clover, so you can\'t get it again!');
                     }
                 }
             }
             if (item_name != 'Crate') {
                 if (shop_type === 'pp') {
-                    return interaction.editReply(`${item_name} has been purchased!\n\`New balance: ${balance}\`<:pp:772971222119612416>`);
+                    return interaction.reply(`${item_name} has been purchased!\n\`New balance: ${balance}\`<:pp:772971222119612416>`);
                 } else {
-                    return interaction.editReply(`${item_name} has been purchased!\n\`New balance: ${balance}\`<:mm:839540228859625522>`);
+                    return interaction.reply(`${item_name} has been purchased!\n\`New balance: ${balance}\`<:mm:839540228859625522>`);
                 }
             } else {
-                return interaction.editReply(`Crate purchased.`);
+                return interaction.reply(`Crate purchased.`);
             }
         } else {
             if (shop_type === 'pp') {
-                return interaction.editReply(`You don't have enough <:pp:772971222119612416> to buy this.\n\`Current balance: ${balance}\`<:pp:772971222119612416>`);
+                return interaction.reply(`You don't have enough <:pp:772971222119612416> to buy this.\n\`Current balance: ${balance}\`<:pp:772971222119612416>`);
             } else {
-                return interaction.editReply(`You don't have enough <:mm:839540228859625522> to buy this.\n\`Current balance: ${balance}\`<:mm:839540228859625522>`);
+                return interaction.reply(`You don't have enough <:mm:839540228859625522> to buy this.\n\`Current balance: ${balance}\`<:mm:839540228859625522>`);
             }
         }
 	},

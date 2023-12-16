@@ -1,5 +1,5 @@
 const db = require('../db.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -17,20 +17,15 @@ module.exports = {
 			option.setName('type')
 				.setDescription('The type of currency to give.')
 				.setRequired(true)
-				.addChoices([
-					[
-						'Pinapl Points',
-						'pp',
-					], [
-						'Murder Money',
-						'mm',
-					],
-				]))
+				.addChoices(
+					{ name: 'Pinapl Points', value: 'pp' },
+					{ name: 'Murder Money', value: 'mm' },
+				))
 		.addBooleanOption(option => 
 			option.setName('all')
 				.setDescription('Give to everyone?')
-				.setRequired(false)),
-	admin: true,
+				.setRequired(false))
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 	async execute(interaction) {
 
 		if (interaction.user.id === '122568101995872256' || interaction.user.id === '145267507844874241') {
@@ -55,7 +50,7 @@ module.exports = {
 					} else {
 						db.balances.set(args[0], prevBalance + args[1]);
 					}
-					interaction.editReply(`Added ${args[1]}<:pp:772971222119612416> to <@${args[0]}>'s account.`);
+					interaction.reply(`Added ${args[1]}<:pp:772971222119612416> to <@${args[0]}>'s account.`);
 					interaction.channel.send(`Money in account: \`${db.balances.get(args[0])}\``);
 				} else {
 					let prevBalance = db.mmbalances.get(args[0]);
@@ -66,7 +61,7 @@ module.exports = {
 					} else {
 						db.mmbalances.set(args[0], prevBalance + args[1]);
 					}
-					interaction.editReply(`Added ${args[1]}<:mm:839540228859625522> to <@${args[0]}>'s account.`);
+					interaction.reply(`Added ${args[1]}<:mm:839540228859625522> to <@${args[0]}>'s account.`);
 					interaction.channel.send(`Money in account: \`${db.mmbalances.get(args[0])}\``);
 				}
 			} else {
@@ -82,7 +77,7 @@ module.exports = {
 							db.balances.set(keyArr[i], prevBalance + args[1]);
 						}
 					}
-					interaction.editReply(`Added ${args[1]}<:pp:772971222119612416> to all accounts.`);
+					interaction.reply(`Added ${args[1]}<:pp:772971222119612416> to all accounts.`);
 				} else {
 					for (let i = 0; i < keyArr.length; i++) {
 						let prevBalance = db.mmbalances.get(keyArr[i]);
@@ -94,11 +89,11 @@ module.exports = {
 							db.mmbalances.set(keyArr[i], prevBalance + args[1]);
 						}
 					}
-					interaction.editReply(`Added ${args[1]}<:mm:839540228859625522> to all accounts.`);
+					interaction.reply(`Added ${args[1]}<:mm:839540228859625522> to all accounts.`);
 				}
 			}
 		} else {
-			interaction.editReply('This command is not for you!');
+			interaction.reply('This command is not for you!');
 		}
 	},
 };

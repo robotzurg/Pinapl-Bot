@@ -1,5 +1,5 @@
 const db = require('../db.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -25,16 +25,11 @@ module.exports = {
 			option.setName('shop')
 				.setDescription('The type of shop to add to.')
 				.setRequired(true)
-                .addChoices([
-					[
-						'Pinapl Points',
-						'pp',
-					], [
-						'Murder Money',
-						'mm',
-					],
-				])),
-    admin: true,
+                .addChoices(
+					{ name: 'Pinapl Points', value: 'pp' },
+					{ name: 'Murder Money', value: 'mm' },
+				))
+        .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 	execute(interaction) {
 
         if (interaction.user.id === '122568101995872256' || interaction.user.id === '145267507844874241') {
@@ -59,9 +54,9 @@ module.exports = {
                 });
             }
 
-            interaction.editReply(`Added ${item_name} to the shop.`);
+            interaction.reply(`Added ${item_name} to the shop.`);
         } else {
-            interaction.editReply(`This command isn't for you!`);
+            interaction.reply(`This command isn't for you!`);
         }
 	},
 };

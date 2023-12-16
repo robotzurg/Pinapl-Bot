@@ -1,13 +1,12 @@
 const db = require('../db.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('work')
         .setDescription('Work for the day!'),
-    admin: false,
     execute(interaction) {
-        if (db.workList.get('workerList').includes(parseInt(interaction.user.id))) return interaction.editReply('You feel pretty tired... You won\'t be able to work for a while.');
+        if (db.workList.get('workerList').includes(parseInt(interaction.user.id))) return interaction.reply('You feel pretty tired... You won\'t be able to work for a while.');
 		db.balances.math(interaction.user.id, '+', 10);
 		db.workList.push('workerList', parseInt(interaction.user.id));
 
@@ -33,7 +32,7 @@ module.exports = {
 			});
 		}
 
-		interaction.editReply('You work diligently and get **10** <:pp:772971222119612416> for your hard work.\nGood job!\nYou won\'t be able to mine until the next work reset.' + 
+		interaction.reply('You work diligently and get **10** <:pp:772971222119612416> for your hard work.\nGood job!\nYou won\'t be able to mine until the next work reset.' + 
 		`\n\n**Streak progress:** Day ${num} out of 30 ${(num < 7) ? `(${7 - num} day(s) until next reward!)` : `(${30 - num} day(s) until next reward!)`}`);
     },
 };

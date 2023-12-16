@@ -1,12 +1,11 @@
 const db = require('../db.js');
 const Discord = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('leaderboard')
         .setDescription('Display the leaderboard for pp.'),
-    admin: false,
 	async execute(interaction) {
         // Gives you an array
         const keyArray = db.balances.keyArray();
@@ -45,6 +44,6 @@ module.exports = {
         .setDescription(embedLBArray);
         console.log(interaction.member);
         leaderboard.addField('══════════════════════════', `**${yourPlacement}**. <:pp:772971222119612416> **${yourBalance}** ${interaction.member.displayName}`);
-        interaction.editReply({ embeds: [leaderboard] });
+        interaction.reply({ embeds: [leaderboard] });
 	},
 };

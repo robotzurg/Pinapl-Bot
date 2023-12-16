@@ -7,4 +7,5 @@ module.exports = {
   balances: new Enmap({ name: "balances" }),
   mmbalances: new Enmap({ name: "mmbalances" }),
   profile: new Enmap({ name: "profile" }),
+  global_bot: new Enmap({ name: "global_bot" }),
 };

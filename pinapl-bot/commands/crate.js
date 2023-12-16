@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -8,19 +8,12 @@ module.exports = {
 			option.setName('crate')
 				.setDescription('What crate to spawn.')
                 .setRequired(true)
-                .addChoices([
-					[
-						'Pinapl Crate',
-						'pinapl',
-					], [
-						'Tricky Crate',
-						'tricky',
-					], [
-						'King Crate',
-						'king',
-					],
-				])),
-	admin: true,
+				.addChoices(
+					{ name: 'Pinal Crate', value: 'pinapl' },
+					{ name: 'Tricky Crate', value: 'tricky' },
+					{ name: 'King Crate', value: 'king' },
+				))
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 	execute(interaction) {
         const cratePick = interaction.options.getString('crate');
 

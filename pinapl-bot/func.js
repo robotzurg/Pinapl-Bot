@@ -26,7 +26,6 @@ module.exports = {
     },
 
     arrayRemove: function(arr, value) { 
-    
         return arr.filter(function(ele) { 
             return ele != value; 
         });
@@ -44,6 +43,7 @@ module.exports = {
     },
     
     add_role: function(msg, user, role_id) {
+        console.log('test');
         const added_role = msg.guild.roles.cache.find(role => role.id === role_id);
         msg.guild.members.fetch(user).then(a => a.roles.add(added_role));
     },
@@ -129,6 +129,17 @@ module.exports = {
 
     getTimeDif: function(startTime, endTime) {
 		return (endTime.getTime() - startTime.getTime());   
+    },
+
+    dateToCron: function(date) {
+        const seconds = date.getSeconds();
+        const minutes = date.getMinutes();
+        const hours = date.getHours();
+        const days = date.getDate();
+        const months = date.getMonth() + 1;
+        const dayOfWeek = date.getDay();
+    
+        return `${seconds} ${minutes} ${hours} ${days} ${months} ${dayOfWeek}`;
     },
     
 };

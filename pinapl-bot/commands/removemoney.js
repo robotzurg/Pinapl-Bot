@@ -1,5 +1,5 @@
 const db = require('../db.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -17,16 +17,11 @@ module.exports = {
 			option.setName('type')
 				.setDescription('The type of currency you are taking.')
                 .setRequired(true)
-                .addChoices([
-					[
-						'Pinapl Points',
-						'pp',
-					], [
-						'Murder Money',
-						'mm',
-					],
-				])),
-	admin: true,
+                .addChoices(
+					{ name: 'Pinapl Points', value: 'pp' },
+					{ name: 'Murder Money', value: 'mm' },
+				))
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 	async execute(interaction) {
 
 		if (interaction.user.id === '122568101995872256' || interaction.user.id === '145267507844874241') {
@@ -41,26 +36,26 @@ module.exports = {
 				if (prevBalance === undefined) prevBalance = false;
 
 				if (prevBalance === false) {
-					return interaction.editReply('No balance for this user exists. Make an account for them!');
+					return interaction.reply('No balance for this user exists. Make an account for them!');
 				} else {
 					db.balances.set(args[0], prevBalance - args[1]);
 				}
-				interaction.editReply(`Removed ${args[1]}<:pp:772971222119612416> from <@${args[0]}>'s account.`);
+				interaction.reply(`Removed ${args[1]}<:pp:772971222119612416> from <@${args[0]}>'s account.`);
 				interaction.channel.send(`Money in account: \`${db.balances.get(args[0])}\``);
 			} else {
 				let prevBalance = db.mmbalances.get(args[0]);
 				if (prevBalance === undefined) prevBalance = false;
 
 				if (prevBalance === false) {
-					return interaction.editReply('No balance for this user exists. Make an account for them!');
+					return interaction.reply('No balance for this user exists. Make an account for them!');
 				} else {
 					db.mmbalances.set(args[0], prevBalance - args[1]);
 				}
-				interaction.editReply(`Removed ${args[1]}<:mm:839540228859625522> from <@${args[0]}>'s account.`);
+				interaction.reply(`Removed ${args[1]}<:mm:839540228859625522> from <@${args[0]}>'s account.`);
 				interaction.channel.send(`Money in account: \`${db.mmbalances.get(args[0])}\``);
 			}
 		} else {
-			interaction.editReply(`This command isn't for you!`);
+			interaction.reply(`This command isn't for you!`);
 		}
 	},
 };

@@ -1,6 +1,6 @@
 const db = require('../db.js');
 const Discord = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -8,7 +8,6 @@ module.exports = {
         .setDescription('See whats in the shop!')
         .addSubcommand(subcommand => subcommand.setName('pp').setDescription('PP shop'))
         .addSubcommand(subcommand => subcommand.setName('mm').setDescription('MM shop')),
-    admin: false,
 	execute(interaction) {
         const shopType = interaction.options._subcommand;
         console.log(shopType);
@@ -42,6 +41,6 @@ module.exports = {
         }
         
 
-        interaction.editReply({ embeds: [shopEmbed] });
+        interaction.reply({ embeds: [shopEmbed] });
 	},
 };

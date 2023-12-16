@@ -1,6 +1,6 @@
 const db = require('../db.js');
 const Discord = require('discord.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('discord.js');
 
 // Set up random number function
 function randomNumber(min, max) {  
@@ -15,7 +15,6 @@ module.exports = {
 			option.setName('number_of_pp')
 				.setDescription('Number of pp to bet!')
 				.setRequired(true)),
-	admin: false,
     cooldown: 900,
 	execute(interaction) {
         let bet_amt = parseInt(interaction.options._hoistedOptions[0].value);
@@ -31,7 +30,7 @@ module.exports = {
         }
         
         if (bet_amt < 0) {
-            return interaction.editReply(`You doofus you can't bet negative money are you TRYING TO SCAM THIS GOOD PINAPL CASINO, I WILL HAVE YOU THROWN OUT FOR YOUR CRIMES`);
+            return interaction.reply(`You doofus you can't bet negative money are you TRYING TO SCAM THIS GOOD PINAPL CASINO, I WILL HAVE YOU THROWN OUT FOR YOUR CRIMES`);
         }
 
         // Stats Update
@@ -92,6 +91,6 @@ module.exports = {
             db.profile.math(interaction.user.id, '+', 1, 'betting.games_tied');
         }
 
-        interaction.editReply({ embeds: [betEmbed] });
+        interaction.reply({ embeds: [betEmbed] });
 	},
 };

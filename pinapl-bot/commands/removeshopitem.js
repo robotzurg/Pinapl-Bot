@@ -1,5 +1,5 @@
 const db = require('../db.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -13,30 +13,18 @@ module.exports = {
 			option.setName('shop_type')
 				.setDescription('The shop to remove the item from.')
                 .setRequired(true)
-                .addChoices([
-					[
-						'Pinapl Points',
-						'pp',
-					], [
-						'Murder Money',
-						'mm',
-					],
-				])),
-	admin: true,
+                .addChoices(
+					{ name: 'Pinapl Points', value: 'pp' },
+					{ name: 'Murder Money', value: 'mm' },
+				))
+		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 	execute(interaction) {
-
-		if (interaction.user.id === '122568101995872256' || interaction.user.id === '145267507844874241') {
-
-			if (interaction.options._hoistedOptions[1].value === 'pp') {
-				db.shop.delete(interaction.options._hoistedOptions[0].value);
-				interaction.editReply(`Removed ${interaction.options._hoistedOptions[0].value} from the pp shop.`);
-			} else {
-				db.mmshop.delete(interaction.options._hoistedOptions[0].value);
-				interaction.editReply(`Removed ${interaction.options._hoistedOptions[0].value} from the mm shop.`);
-			}
-
+		if (interaction.options._hoistedOptions[1].value === 'pp') {
+			db.shop.delete(interaction.options._hoistedOptions[0].value);
+			interaction.reply(`Removed ${interaction.options._hoistedOptions[0].value} from the pp shop.`);
 		} else {
-			interaction.editReply(`This command isn't for you!`);
+			db.mmshop.delete(interaction.options._hoistedOptions[0].value);
+			interaction.reply(`Removed ${interaction.options._hoistedOptions[0].value} from the mm shop.`);
 		}
 	},
 };

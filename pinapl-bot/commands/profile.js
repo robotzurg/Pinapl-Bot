@@ -1,5 +1,5 @@
 const db = require('../db.js');
-const { SlashCommandBuilder } = require('@discordjs/builders');
+const { SlashCommandBuilder } = require('discord.js');
 const Discord = require('discord.js');
 
 module.exports = {
@@ -10,18 +10,11 @@ module.exports = {
 			option.setName('profile_type')
 				.setDescription('What part of the profile you want to see.')
                 .setRequired(true)
-                .addChoices([
-                    [
-						'General Casino',
-						'casino',
-					], [
-						'Betting',
-						'betting',
-					], [
-						'Slots',
-						'slots',
-					],
-				])),
+                .addChoices(
+                    { name: 'General Casino', value: 'casino' },
+                    { name: 'Betting', value: 'betting' },
+                    { name: 'Slots', value: 'slots' },
+                )),
 	async execute(interaction) {
             let profile_type = interaction.options.getString('profile_type');
             let statsObj = db.profile.get(interaction.user.id, profile_type);
@@ -80,6 +73,6 @@ module.exports = {
                 
             }
 
-            interaction.editReply({ embeds: [profileEmbed] });
+            interaction.reply({ embeds: [profileEmbed] });
 	},
 };
