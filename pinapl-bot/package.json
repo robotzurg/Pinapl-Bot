@@ -2,7 +2,7 @@
   "dependencies": {
     "@discordjs/rest": "*",
     "discord.js": "^14.14.1",
-    "enmap": "^5.8.7",
-    "node-cron": "^3.0.0"
+    "enmap": "^5.9.8",
+    "node-cron": "^3.0.3"
   }
 }

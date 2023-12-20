@@ -1,6 +1,5 @@
 const db = require('../db.js');
-const Discord = require('discord.js');
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -29,7 +28,6 @@ module.exports = {
         let username;
 
         for (let i = 0; i < leaderboardArray.length; i++) {
-            console.log(leaderboardArray[i][0]);
             username = await interaction.guild.members.fetch(leaderboardArray[i][0]);
             username = username.displayName;
             embedLBArray.push(`**${i + 1}**. <:pp:772971222119612416> **${leaderboardArray[i][1]}**  ${username}`);
@@ -37,13 +35,12 @@ module.exports = {
 
         embedLBArray = embedLBArray.join('\n\n');
 
-        const leaderboard = new Discord.MessageEmbed()
+        const leaderboard = new EmbedBuilder()
 
         .setColor('#ffff00')
         .setTitle(`Pinapl's Murder Royale <:pp:772971222119612416> Leaderboard`)
         .setDescription(embedLBArray);
-        console.log(interaction.member);
-        leaderboard.addField('══════════════════════════', `**${yourPlacement}**. <:pp:772971222119612416> **${yourBalance}** ${interaction.member.displayName}`);
+        leaderboard.addFields([{ name: '══════════════════════════', value: `**${yourPlacement}**. <:pp:772971222119612416> **${yourBalance}** ${interaction.member.displayName}` }]);
         interaction.reply({ embeds: [leaderboard] });
 	},
 };

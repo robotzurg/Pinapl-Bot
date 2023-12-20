@@ -42,15 +42,14 @@ module.exports = {
         return string;
     },
     
-    add_role: function(msg, user, role_id) {
-        console.log('test');
-        const added_role = msg.guild.roles.cache.find(role => role.id === role_id);
-        msg.guild.members.fetch(user).then(a => a.roles.add(added_role));
+    add_role: function(guild, user, role_id) {
+        const added_role = guild.roles.cache.find(role => role.id === role_id);
+        guild.members.fetch(user).then(a => a.roles.add(added_role));
     },
 
-    remove_role: function(msg, user, role_id) {
-        const removed_role = msg.guild.roles.cache.find(role => role.id === role_id);
-        msg.guild.members.fetch(user).then(a => a.roles.remove(removed_role));
+    remove_role: function(guild, user, role_id) {
+        const removed_role = guild.roles.cache.find(role => role.id === role_id);
+        guild.members.fetch(user).then(a => a.roles.remove(removed_role));
     },
 
     add_or_remove_role: function(msg, user, role_id) {

@@ -144,18 +144,27 @@ client.once('ready', async () => {
 	let roles = db.global_bot.get('role_timestamps');
 	for (let roleData of roles) {
 		cron.schedule(roleData.time, () => { 
-			console.log('test');
-			(roleData.remove == false) ? add_role(client, roleData.user, roleData.role) : remove_role(client, roleData.user, roleData.role);
-			let channelToSend = client.channels.cache.get('814788744573878312');
-			channelToSend.send(roleData.remove == false ? `The role **${roleData.role_name}** has been added to <@${roleData.user}> as per a scheduled role change.` : 
-			`The role **${roleData.role_name}** has been removed from <@${roleData.user}> as per a scheduled role change.`)
+			try {
+				const guild = client.guilds.cache.get('771373425734320159');
+				let channelToSend = client.channels.cache.get('814788744573878312');
 
-			let timestamps = db.global_bot.get('role_timestamps');
-			timestamps = timestamps.filter(v => v.role != roleData.role && v.user != roleData.user && v.time != roleData.time);
-			db.global_bot.set('role_timestamps', timestamps);
+				if (roleData.remove == false) {
+					add_role(guild, roleData.user, roleData.role)
+					channelToSend.send(`The role **${roleData.role_name}** has been added to <@${roleData.user}> as per a scheduled role change.`);
+				} else {
+					remove_role(guild, roleData.user, roleData.role);
+					channelToSend.send(`The role **${roleData.role_name}** has been removed from <@${roleData.user}> as per a scheduled role change.`);
+				}
+
+				let timestamps = db.global_bot.get('role_timestamps');
+				timestamps = timestamps.filter(v => v.role != roleData.role || v.user != roleData.user || v.time != roleData.time);
+				db.global_bot.set('role_timestamps', timestamps);
+			} catch (err) {
+				console.log(err);
+			}
 		}, {
 			scheduled: true,
-		});	
+		});
 	}
 
 	console.log(`Reloaded ${msgs.length} scheduled messages.`);
@@ -692,6 +701,7 @@ client.on('messageCreate', async message => {
 		if (message.author.id == '122568101995872256' || message.author.id == '145267507844874241') {
 			let args = message.content.split('\n');
 			let channelId = args[0].split(' ');
+			let outputMsgs = [];
 			(channelId.length == 1) ? channelId = '994714605362364587' : channelId = channelId[1];
 			if (isNaN(parseInt(channelId))) return message.channel.send('Invalid channel ID, please try again.')
 			let channelToSend = client.channels.cache.get(channelId);
@@ -709,6 +719,7 @@ client.on('messageCreate', async message => {
 				let scheduleTime = dateToCron(date);
 
 				db.global_bot.push('msg_timestamps', {channel: channelId, time: scheduleTime, msg: scheduleMsg});
+				outputMsgs.push(`**${scheduleMsg}** (on <t:${unixTimestamp}:f>)`)
 	
 				cron.schedule(scheduleTime, () => { 
 					channelToSend.send(scheduleMsg);
@@ -720,7 +731,7 @@ client.on('messageCreate', async message => {
 				});	
 			}
 		
-			message.channel.send(`Messages have been successfully scheduled, and will appear in <#${channelId}>!`);
+			message.channel.send(`## Message Schedule Summary\nOutput Channel: <#${channelId}>\n-----------------------------------------------------------\n${outputMsgs.join('\n')}`);
 		}
 	}
 

@@ -14,8 +14,8 @@ module.exports = {
                 .setDescription('The amount of pp to send')
                 .setRequired(true)),
 	async execute(interaction) {
-        const taggedUser = await interaction.guild.members.fetch(interaction.options._hoistedOptions[0].value);
-        if (taggedUser === interaction.user || interaction.options._hoistedOptions[0].value === interaction.user.id) return interaction.reply('You can\'t send <:pp:772971222119612416> to yourself.');
+        const taggedUser = await interaction.guild.members.fetch(interaction.options.getUser('user').id);
+        if (taggedUser === interaction.user || interaction.options.getUser('user').id === interaction.user.id) return interaction.reply('You can\'t send <:pp:772971222119612416> to yourself.');
         const send_amt = interaction.options.getInteger('amount_of_pp')
 
         let authorBal = db.balances.get(interaction.user.id);
