@@ -71,61 +71,6 @@ client.once('ready', async () => {
     const date = new Date().toLocaleTimeString().replace("/.*(d{2}:d{2}:d{2}).*/", "$1");
     console.log(date);
 
-	// #region remove later
-	// const list = client.guilds.cache.get("771373425734320159"); 
-	// list.members.fetch().then(fetchedMembers => {
-	// 	fetchedMembers.forEach(v => {
-	// 		if (!db.balances.has(v.user.id)) {
-	// 			db.balances.set(v.user.id, 0);
-	// 		}
-
-	// 		if (!db.mmbalances.has(v.user.id)) {
-	// 			db.mmbalances.set(v.user.id, 0);
-	// 		}
-
-	// 		if (!db.profile.has(v.user.id)) {
-	// 			db.profile.set(v.user.id, {
-	// 				"betting": {
-	// 					"games_lost": 0,
-	// 					"games_played": 0,
-	// 					"games_tied": 0,
-	// 					"games_won": 0,
-	// 					"pp_lost": 0,
-	// 					"pp_won": 0,
-	// 				},
-	// 				"casino": {
-	// 					"crates": 0,
-	// 					"games_played": 0,
-	// 					"items_bought": 0,
-	// 					"pp_lost": 0,
-	// 					"pp_won": 0,
-	// 				},
-	// 				"items": [],
-	// 				"murder": {
-	// 					"games_list": [],
-	// 					"games_played": 0,
-	// 					"games_won": 0,
-	// 					"kd_ratio": 0,
-	// 					"kill_streak": 0,
-	// 					"kills": 0,
-	// 				},
-	// 				"slots": {
-	// 					"adios": 0,
-	// 					"games_played": 0,
-	// 					"jackpot": 0,
-	// 					"negative": 0,
-	// 					"neutral": 0,
-	// 					"positive": 0,
-	// 					"pp_lost": 0,
-	// 					"pp_won": 0,
-	// 				},
-	// 				"treats": 0,
-	// 			});
-	// 		}
-	// 	});
-	// });
-	// #endregion
-
 	// Reload scheduled messages
 	let msgs = db.global_bot.get('msg_timestamps');
 	for (let msgData of msgs) {
@@ -171,42 +116,42 @@ client.once('ready', async () => {
 	console.log(`Reloaded ${roles.length} scheduled role changes.`);
 });
 	
-const crateFunction = function() {
-	const channel = client.channels.cache.get('889637708195070013');
-	const cratePick = weighted_random(crateChance);
+// const crateFunction = function() {
+// 	const channel = client.channels.cache.get('889637708195070013');
+// 	const cratePick = weighted_random(crateChance);
 
-	switch(cratePick) {
-		case 'pinapl': channel.send('<:botglad:916344650405642292> PINAPL CRATE <:botglad:916344650405642292>\n*React first to claim!*'); break;
-		case 'tricky': channel.send('<:botcat:791088071802224710> TRICKY CRATE <:botcat:791088071802224710>\n*React first to claim!*'); break;
-		case 'king': channel.send(':crown: KING CRATE :crown:\n*React first to claim!*'); break;
-	}
+// 	switch(cratePick) {
+// 		case 'pinapl': channel.send('<:botglad:916344650405642292> PINAPL CRATE <:botglad:916344650405642292>\n*React first to claim!*'); break;
+// 		case 'tricky': channel.send('<:botcat:791088071802224710> TRICKY CRATE <:botcat:791088071802224710>\n*React first to claim!*'); break;
+// 		case 'king': channel.send(':crown: KING CRATE :crown:\n*React first to claim!*'); break;
+// 	}
 	
-	intervalTime = randomNumber(2.88e+7, 4.32e+7);
-	setTimeout(crateFunction, intervalTime);
-};
+// 	intervalTime = randomNumber(2.88e+7, 4.32e+7);
+// 	setTimeout(crateFunction, intervalTime);
+// };
 
 // setTimeout(crateFunction, intervalTime);
 
-// Send the workers a message at 10am PST
-cron.schedule('00 11 * * *', () => { 
-	const workchannel = client.channels.cache.get('809854279552598016');
-	workchannel.send('Rise and shine employees of Citrus Inc.! Another day has passed, and now you can all work.\nDon\'t forget, you can use `/work` to work!');
-	for (let i = 0; i < db.workList.get('workerList').length; i++) {
-		let arr = db.workList.keyArray();
-		if (arr[i] != 'workerList') {
-			if (db.workList.get(arr[i], 'worked') === false) {
-				db.workList.set(arr[i], 0, 'streak');
-			} else {
-				db.workList.set(arr[i], false, 'worked');
-			}
-		}
-	}
+// // Send the workers a message at 10am PST
+// cron.schedule('00 11 * * *', () => { 
+// 	const workchannel = client.channels.cache.get('809854279552598016');
+// 	workchannel.send('Rise and shine employees of Citrus Inc.! Another day has passed, and now you can all work.\nDon\'t forget, you can use `/work` to work!');
+// 	for (let i = 0; i < db.workList.get('workerList').length; i++) {
+// 		let arr = db.workList.keyArray();
+// 		if (arr[i] != 'workerList') {
+// 			if (db.workList.get(arr[i], 'worked') === false) {
+// 				db.workList.set(arr[i], 0, 'streak');
+// 			} else {
+// 				db.workList.set(arr[i], false, 'worked');
+// 			}
+// 		}
+// 	}
 
-	db.workList.set('workerList', []);
+// 	db.workList.set('workerList', []);
 	
-}, {
-    scheduled: true,
-});
+// }, {
+//     scheduled: true,
+// });
 
 // Listen for interactions (INTERACTION COMMAND HANDLER)
 client.on('interactionCreate', async interaction => {
@@ -735,52 +680,52 @@ client.on('messageCreate', async message => {
 		}
 	}
 
-	if (message.content.includes('React first to claim')) {
-		message.react('🔑');
+	// if (message.content.includes('React first to claim')) {
+	// 	message.react('🔑');
 
-		const filter = (reaction, user) => {
-			crateUsrID = user.id;
-			return ['🔑'].includes(reaction.emoji.name) && (user.id != message.author.id);
-		};
+	// 	const filter = (reaction, user) => {
+	// 		crateUsrID = user.id;
+	// 		return ['🔑'].includes(reaction.emoji.name) && (user.id != message.author.id);
+	// 	};
 
-		await message.awaitReactions({ filter, max: 1 })
-			.then(collected => {
-				const reaction = collected.first();
+	// 	await message.awaitReactions({ filter, max: 1 })
+	// 		.then(collected => {
+	// 			const reaction = collected.first();
 		
-				if (reaction.emoji.name === '🔑') {
-					let crateAmt = 0;
+	// 			if (reaction.emoji.name === '🔑') {
+	// 				let crateAmt = 0;
 
-					if (message.content.includes('PINAPL CRATE')) {
-						crateAmt = Math.round(randomNumber(5, 30));
-						message.channel.send(`<@${crateUsrID}> has claimed the crate.\nYou find **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
-						db.balances.math(crateUsrID, '+', crateAmt);
-						db.profile.math(crateUsrID, '+', 1, 'casino.crates');
+	// 				if (message.content.includes('PINAPL CRATE')) {
+	// 					crateAmt = Math.round(randomNumber(5, 30));
+	// 					message.channel.send(`<@${crateUsrID}> has claimed the crate.\nYou find **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
+	// 					db.balances.math(crateUsrID, '+', crateAmt);
+	// 					db.profile.math(crateUsrID, '+', 1, 'casino.crates');
 
-					} else if (message.content.includes('TRICKY CRATE')) {
-						let chance = weighted_random(trickyChance);
-						console.log(crateUsrID);
-						if (chance === 'give') {
-							crateAmt = Math.round(randomNumber(20, 50));
-							message.channel.send(`<@${crateUsrID}> has claimed the crate.\nYou find **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
-							db.balances.math(crateUsrID, '+', crateAmt);
-							db.profile.math(crateUsrID, '+', 1, 'casino.crates');
-						} else if (chance === 'take') {
-							crateAmt = Math.round(randomNumber(1, 50));
-							message.channel.send(`<@${crateUsrID}> has claimed the crate.\n A hand comes out of the crate, reaches into your pocket, and steals **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
-							db.balances.math(crateUsrID, '-', crateAmt);
-							db.profile.math(crateUsrID, '+', 1, 'casino.crates');
-						}
+	// 				} else if (message.content.includes('TRICKY CRATE')) {
+	// 					let chance = weighted_random(trickyChance);
+	// 					console.log(crateUsrID);
+	// 					if (chance === 'give') {
+	// 						crateAmt = Math.round(randomNumber(20, 50));
+	// 						message.channel.send(`<@${crateUsrID}> has claimed the crate.\nYou find **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
+	// 						db.balances.math(crateUsrID, '+', crateAmt);
+	// 						db.profile.math(crateUsrID, '+', 1, 'casino.crates');
+	// 					} else if (chance === 'take') {
+	// 						crateAmt = Math.round(randomNumber(1, 50));
+	// 						message.channel.send(`<@${crateUsrID}> has claimed the crate.\n A hand comes out of the crate, reaches into your pocket, and steals **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
+	// 						db.balances.math(crateUsrID, '-', crateAmt);
+	// 						db.profile.math(crateUsrID, '+', 1, 'casino.crates');
+	// 					}
 
-					} else if (message.content.includes('KING CRATE')) {
-						crateAmt = Math.round(randomNumber(50, 500));
-						message.channel.send(`<@${crateUsrID}> has claimed the crate.\nYou find **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
-						db.balances.math(crateUsrID, '+', crateAmt);
-						db.profile.math(crateUsrID, '+', 1, 'casino.crates');
-					}
+	// 				} else if (message.content.includes('KING CRATE')) {
+	// 					crateAmt = Math.round(randomNumber(50, 500));
+	// 					message.channel.send(`<@${crateUsrID}> has claimed the crate.\nYou find **${crateAmt}** <:pp:772971222119612416>! Congratulations!`);
+	// 					db.balances.math(crateUsrID, '+', crateAmt);
+	// 					db.profile.math(crateUsrID, '+', 1, 'casino.crates');
+	// 				}
 
-				}
-			});
-	}	
+	// 			}
+	// 		});
+	// }	
 });
 
 // login to Discord
