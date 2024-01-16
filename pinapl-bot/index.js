@@ -3,7 +3,7 @@
 
 const Discord = require('discord.js');
 const fs = require('fs');
-const { token } = require('./config.json');
+const { token, dev_token } = require('./config.json');
 const db = require("./db.js");
 const cron = require("node-cron");
 const { add_role, remove_role, weighted_random, updateGameStatus, updateSponsorList, updateUserStatus, capitalize, dateToCron, test } = require('./func');
@@ -23,6 +23,7 @@ const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBit
     GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences, GatewayIntentBits.MessageContent, GatewayIntentBits.DirectMessages], partials: [Partials.Channel, Partials.Message, Partials.Reaction] });
 client.commands = new Discord.Collection();
 client.cooldowns = new Discord.Collection();
+const cronTasks = [];
 const mainCommands = [];
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
 
@@ -77,7 +78,8 @@ client.once('ready', async () => {
 	let msgs = db.global_bot.get('msg_timestamps');
 	for (let msgData of msgs) {
 		let channelToSend = client.channels.cache.get(msgData.channel);
-		cron.schedule(msgData.time, () => { 
+		if (msgData.timestamp == undefined) msgData.timestamp = '0';
+		let task = cron.schedule(msgData.time, () => { 
 			channelToSend.send(msgData.msg);
 			let timestamps = db.global_bot.get('msg_timestamps');
 			timestamps = timestamps.filter(v => v.time != msgData.time && v.msg != msgData.msg);
@@ -85,6 +87,7 @@ client.once('ready', async () => {
 		}, {
 			scheduled: true,
 		});	
+		cronTasks.push({timestamp: msgData.timestamp, task: task});
 	}
 
 	// Reload scheduled role changes
@@ -189,7 +192,7 @@ client.on('interactionCreate', async interaction => {
 	setTimeout(() => client.timestamps.delete(interaction.user.id), cooldownAmount); 
 
     try {
-        await command.execute(interaction, client);
+        await command.execute(interaction, client, cronTasks);
     } catch (error) {
         await console.error(error);
         await interaction.reply(`There was an error trying to execute that command!`);
@@ -664,11 +667,9 @@ client.on('messageCreate', async message => {
 				if (!Date.parse(date)) return message.channel.send(`${unixTimestamp} is not a valid date timestamp, please try again.`);
 				if (date < currentDate) return message.channel.send(`${unixTimestamp} is in the past, and thus cannot be used to schedule. Please try again.`)
 				let scheduleTime = dateToCron(date);
-
-				db.global_bot.push('msg_timestamps', {channel: channelId, time: scheduleTime, msg: scheduleMsg});
 				outputMsgs.push(`**${scheduleMsg}** (on <t:${unixTimestamp}:f>)`)
 	
-				cron.schedule(scheduleTime, () => { 
+				let task = cron.schedule(scheduleTime, () => { 
 					channelToSend.send(scheduleMsg);
 					let timestamps = db.global_bot.get('msg_timestamps');
 					timestamps = timestamps.filter(v => v.time != scheduleTime && v.msg != scheduleMsg);
@@ -676,6 +677,9 @@ client.on('messageCreate', async message => {
 				}, {
 					scheduled: true,
 				});	
+
+				db.global_bot.push('msg_timestamps', {channel: channelId, time: scheduleTime, msg: scheduleMsg, timestamp: unixTimestamp});
+				cronTasks.push({timestamp: unixTimestamp, task: task});
 			}
 		
 			message.channel.send(`## Message Schedule Summary\nOutput Channel: <#${channelId}>\n-----------------------------------------------------------\n${outputMsgs.join('\n')}`);
