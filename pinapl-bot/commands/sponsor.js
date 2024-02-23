@@ -16,7 +16,7 @@ module.exports = {
             db.profile.set(interaction.user.id, 1, 'sponsor_count');
         } else {
             if (db.profile.get(interaction.user.id, 'sponsor_count') == 3) {
-                return interaction.reply('You have hit your maximum of 3 sponsors for this time period.')
+                return interaction.reply('You have hit your maximum of 3 sponsors for this time period. You can sponsor again at 10am MST.')
             } else {
                 db.profile.math(interaction.user.id, '+', 1, 'sponsor_count');
             }

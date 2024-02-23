@@ -140,6 +140,10 @@ client.once('ready', async () => {
 // Send the workers a message at 10am PST
 cron.schedule('00 11 * * *', () => { 
 
+	let profileList = db.profile.keyArray();
+	for (let user of profileList) {
+		db.profile.set(user, 0, 'sponsor_count');
+	}
 	// const workchannel = client.channels.cache.get('809854279552598016');
 	// workchannel.send('Rise and shine employees of Citrus Inc.! Another day has passed, and now you can all work.\nDon\'t forget, you can use `/work` to work!');
 	// for (let i = 0; i < db.workList.get('workerList').length; i++) {
