@@ -10,7 +10,7 @@ module.exports = {
 		if (interaction.user.id === '122568101995872256' || interaction.user.id === '145267507844874241') {
             db.global_bot.set('sponsor_list', []);
             interaction.reply('Cleared sponsor list.');
-            const sponsorChannel = interaction.guild.channels.cache.get('1208489328108376084');
+            const sponsorChannel = interaction.guild.channels.cache.get('1189793123329654824');
             for (let i = 0; i < 5; i++) {
                 // Delete 500 messages;
                 await sponsorChannel.bulkDelete(100);

@@ -24,8 +24,7 @@ module.exports = {
         
         db.global_bot.push('sponsor_list', {item: item, user_id: interaction.user.id});
 
-        // Dev channel
-        const sponsorChannel = interaction.guild.channels.cache.get('1208489328108376084');
+        const sponsorChannel = interaction.guild.channels.cache.get('1189793123329654824');
         sponsorChannel.send(`- **${item}** from <@${interaction.user.id}>`)
         interaction.reply(`The item **${item}** has been sponsored into the Murder Royale!`)
 	},
