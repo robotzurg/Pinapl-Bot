@@ -51,14 +51,14 @@ for (const file of commandFiles) {
     }
 }
 
-const rest = new REST({ version: '9' }).setToken(dev_token);
+const rest = new REST({ version: '9' }).setToken(token);
 
 (async () => {
 	try {
 		console.log('Started refreshing application (/) commands.');
 
 		await rest.put(
-			Routes.applicationGuildCommands(devClientId, devGuildId),
+			Routes.applicationGuildCommands(clientId, guildId),
 			{ body: mainCommands },
 		);
 
@@ -340,5 +340,5 @@ client.on('messageCreate', async message => {
 });
 
 // login to Discord
-client.login(dev_token);
+client.login(token);
 
