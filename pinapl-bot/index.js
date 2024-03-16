@@ -253,7 +253,7 @@ client.on('messageCreate', async message => {
 
 	// Schedule Message Command
 	if (message.content.includes('!schedule')) { 
-		if (message.author.id == '122568101995872256' || message.author.id == '145267507844874241') {
+		if (message.author.id == '122568101995872256' || message.author.id == '145267507844874241' || message.author.id == '216811126074114048') {
 			let args = message.content.split('\n');
 			let channelId = args[0].split(' ');
 			let outputMsgs = [];
