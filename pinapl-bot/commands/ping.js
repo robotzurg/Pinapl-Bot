@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {

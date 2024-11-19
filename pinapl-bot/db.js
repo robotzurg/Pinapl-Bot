@@ -8,4 +8,5 @@ module.exports = {
   mmbalances: new Enmap({ name: "mmbalances" }),
   profile: new Enmap({ name: "profile" }),
   global_bot: new Enmap({ name: "global_bot" }),
+  stream_list: new Enmap({ name: "stream_list" })
 };
