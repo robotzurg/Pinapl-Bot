@@ -27,7 +27,7 @@ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('
 // Place your client and guild ids here
 const clientId = '791055052067962891';
 const devClientId = '818709319084015616';
-const guildId = '771373425734320159';
+const guildId = '937424970907271270';
 const devGuildId = '784994152189919264';
 
 client.cooldowns = new Discord.Collection();

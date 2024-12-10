@@ -142,7 +142,7 @@ function main(bot, chan, guild, gameName) {
 }
 
 function streams(bot, guild) {
-    const chan = guild.channels.cache.get('814629332860534805');
+    const chan = guild.channels.cache.get('1315905388272422974');
     if (chan) {
         main(bot, chan, guild, 'Alnico Smithery');
     }
