@@ -1,4 +1,4 @@
-const { Permissions, MessageEmbed } = require("discord.js");
+const { Permissions, EmbedBuilder } = require("discord.js");
 const { AppTokenAuthProvider } = require("@twurple/auth");
 const { ApiClient } = require("@twurple/api");
 const db = require('./db.js');
@@ -18,7 +18,7 @@ async function getGameID(name) {
 
 async function getStreamsForGame(gameid, opts = { game: gameid, limit: 100 }, result = { streams: [] }) {
     const streams = await client.streams.getStreams(opts);
-    result = { game: gameid, streams: streams.data };
+    result = { game: gameid, streams: streams.data }
     if (streams.data.length === 100) {
         const res = await getStreamsForGame(gameid, {
             after: streams.cursor,
@@ -79,7 +79,7 @@ async function sendManager(streams, users, chan, gameUrl) {
         const min = Math.floor(((now - d - (hrs * 60 * 60 * 1000)) / 1000) / 60);
         const uptime = `${hrs.toString().padStart(2, '0')}:${min.toString().padStart(2, '0')}`;
 
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
             .setDescription(stream.title)
             .setColor([100, 60, 160])
             .setAuthor({
@@ -89,13 +89,15 @@ async function sendManager(streams, users, chan, gameUrl) {
             })
             .setTimestamp(d)
             .setFooter({
-                text: "Started at",
+                text: "Started",
                 iconURL: "https://static.twitchcdn.net/assets/favicon-32-d6025c14e900565d6177.png"
             })
             .setURL(`https://twitch.tv/${user.name}`)
-            .addField("Viewers", stream.viewers.toString(), true)
-            .addField("Uptime", uptime, true)
-            .addField("URL", `[ttv/${user.name}](https://twitch.tv/${user.name})`, true);
+            .addFields([
+                { name: "Viewers", value: stream.viewers.toString(), inline: true },
+                { name: "Uptime", value: uptime, inline: true },
+                { name: "URL", value: `[ttv/${user.name}](https://twitch.tv/${user.name})`, inline: true },
+            ])
 
         const img = `${stream.thumbnailUrl.replace("{width}", "880").replace("{height}", "496")}?${Date.now()}`;
         if (streams.length > 1) {
@@ -105,7 +107,7 @@ async function sendManager(streams, users, chan, gameUrl) {
         }
 
         if (!streamIDs.some(s => s.streamID === stream.id)) {
-            const m = await chan.send({ content: "\u200b", embeds: [embed] });
+            const m = await chan.send({ content: "New Alnico Smithery Stream!\nGo check it out!", embeds: [embed] });
             streamIDs.push({ streamID: stream.id, msgID: m.id });
             amntSent++;
         }
@@ -122,7 +124,7 @@ async function sendManager(streams, users, chan, gameUrl) {
 
 function main(bot, chan, guild, gameName) {
     const gameUrl = `https://twitch.tv/directory/game/${encodeURIComponent(gameName)}`;
-    console.log(gameUrl);
+    console.log('Checking Streams...');
     getGameID(gameName)
         .then(getStreamsForGame)
         .then(data => {
