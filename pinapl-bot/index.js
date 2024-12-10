@@ -140,6 +140,15 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
+client.on('messageCreate', async message => {
+	// Crosspost a message
+	if (message.channel.type === Discord.ChannelType.GuildAnnouncement) {
+		message.crosspost()
+		.then(() => console.log('Crossposted message'))
+		.catch(console.error);
+	}
+})
+
 // login to Discord
 client.login(token);
 
