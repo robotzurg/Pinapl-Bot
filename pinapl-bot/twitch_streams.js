@@ -55,7 +55,7 @@ async function removeClosedStreams(streamIDs, closedStreams, chan) {
             }
             if (m) {
                 try {
-                    await m.delete();
+                    await m.edit({ content: '**This stream has ended.**', });
                 } catch (e) {
                     console.error(`Could not delete message with ID ${m.id}`);
                 }
